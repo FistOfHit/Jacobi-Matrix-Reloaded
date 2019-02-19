@@ -1,60 +1,70 @@
 #include <iostream>
+#include <typeinfo>
 #include "Matrix.h"
 
-// Constructor - using an initialisation list here
+
+// Constructor for zero array
 template <class T>
-Matrix<T>::Matrix(int rows, int cols, bool preallocate): rows(rows), cols(cols), size_of_values(rows * cols), preallocated(preallocate)
-{
-   // If we want to handle memory ourselves
-   if (this->preallocated)
-   {
-      // Must remember to delete this in the destructor
-      this->values = new T[size_of_values];
-   }
+Matrix<T>::Matrix(int num_rows, int num_cols, bool self_allocate):  num_rows(num_rows), num_cols(num_cols),
+                                                                    num_elements(rows * cols), self_allocate(self_allocate)  {
+
+   if (self_allocate) {    
+
+      // Destructor will handle
+      this->elements = new T[num_elements];
+
+      for (int i = 0; i < num_elements; i++) {
+         this->elements[i] = 0;
+      }
+
+   } 
+
 }
 
-// Constructor - now just setting the value of our T pointer
-template <class T>
-Matrix<T>::Matrix(int rows, int cols, T *values_ptr): rows(rows), cols(cols), size_of_values(rows * cols), values(values_ptr)
-{}
 
-// destructor
+// Constructor for already allocated array
 template <class T>
-Matrix<T>::~Matrix()
-{
-   // Delete the values array
-   if (this->preallocated){
-      delete[] this->values;
+Matrix<T>::Matrix(int num_rows, int num_cols, T *array_ptr): num_rows(num_rows), num_cols(num_cols),
+                                                              num_elements(rows * cols), elements(array_ptr) {}
+
+
+// Destructor - deallocates memory
+template <class T>
+Matrix<T>::~Matrix() {
+
+   // Delete the array
+   if (this->preallocated) {
+      delete[] this->elements;
    }
+
 }
 
-// Just print out the values in our values array
-template <class T>
-void Matrix<T>::printValues() 
-{ 
-   std::cout << "Printing values" << std::endl;
-	for (int i = 0; i< this->size_of_values; i++)
-   {
-      std::cout << this->values[i] << " ";
-   }
-   std::cout << std::endl;
-}
 
 // Explicitly print out the values in values array as if they are a matrix
 template <class T>
-void Matrix<T>::printMatrix() 
-{ 
-   std::cout << "Printing matrix" << std::endl;
-   for (int j = 0; j< this->rows; j++)
-   {  
-      std::cout << std::endl;
-      for (int i = 0; i< this->cols; i++)
-      {
-         // We have explicitly used a row-major ordering here
-         std::cout << this->values[i + j * this->cols] << " ";
+void Matrix<T>::print() { 
+
+
+   // Size of whats being printed
+   std::cout << "Matrix: " << this->num_rows << " X " << this->num_cols << std::endl;
+   // Data type of array
+   std::cout << "Dtype: " << typeid(this->elements[0].name()) << std::endl;
+
+
+   int row_number;
+   for (int i = 0; i < this->rows; i++) {  
+
+      row_number = i * this->num_cols
+
+      for (int j = 0; j < this->num_cols; j++) {
+         std::cout << this->values[row_number + j] << " ";
       }
+
+      std::cout << std::endl;
+
    }
-   std::cout << std::endl;
+
+
 }
 
 // Do matrix matrix multiplication
