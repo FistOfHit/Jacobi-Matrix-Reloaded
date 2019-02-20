@@ -20,6 +20,9 @@ public:
    // Perform some operations with our matrix
    virtual void matMatMult(Matrix& mat_right, Matrix& output);
 
+   // Load in matrix case
+   void mat_load(char name);
+
    // Explicitly using the C++11 nullptr here
    T *values = nullptr;   
    int rows = -1;

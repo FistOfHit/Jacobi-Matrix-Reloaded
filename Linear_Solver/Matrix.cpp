@@ -107,3 +107,59 @@ void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
       }
    }
 }
+
+
+
+template <class T>
+void Matrix<T>::mat_load(char name)
+{
+	if (name == 'A') { // LU Decomposition
+		this->values[0] = 2;
+		this->values[1] = -1;
+		this->values[2] = -2;
+		this->values[3] = -4;
+		this->values[4] = 6;
+		this->values[5] = 3;
+		this->values[6] = -4;
+		this->values[7] = -2;
+		this->values[8] = 8;
+	}
+	else if (name == 'B') { // Cholesky
+		this->values[0] = 4;
+		this->values[1] = 12;
+		this->values[2] = -16;
+		this->values[3] = 12;
+		this->values[4] = 37;
+		this->values[5] = -43;
+		this->values[6] = -16;
+		this->values[7] = -43;
+		this->values[8] = 98;
+	}
+	else if (name == 'C') { // Upper Empty
+		for (int i = 0; i < 9; i++) {
+			this->values[i] = 0;
+		}
+	}
+	else if (name == 'D') { // Lower Identity
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (i == j) {
+					this->values[i * rows + j] = 1;
+				}
+				else {
+					this->values[i * rows + j] = 0;
+				}
+			}
+		}
+	}
+	else if (name == 'E') { // y and x empty
+		for (int i = 0; i < 3; i++) {
+			this->values[i] = 0;
+		}
+	}
+	else if (name == 'F') { // B 
+		this->values[0] = 3;
+		this->values[1] = 2;
+		this->values[2] = 1;
+	}
+}
