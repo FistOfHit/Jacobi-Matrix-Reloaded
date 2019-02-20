@@ -1,6 +1,6 @@
 #include <iostream>
 #include <math.h>
-#include <time.h>
+#include <time.h>s
 #include "Matrix.cpp"
 #include "jacobi.h"
 #include <assert.h>
@@ -28,6 +28,9 @@ void creation_tests() {
 		<< "21 22 23 24 25" << std::endl;
 
 	test_matrix1.print();
+
+
+	test_matrix.print();
 
 	// Lets test if we can create an empty matrix
 	// (full of zeros) and print it out
@@ -152,13 +155,13 @@ Matrix<double>* backwards_substitution(Matrix<double> *U, Matrix<double> *y, Mat
 	return x;
 }
 
-
 int main() {
 	int rows = 3;
 	int cols = 3;
 
 	delete A;
 	delete L;*/
+
 	//run_tests(); // If you want to run the tests
 
 	// Performs Lower Upper decomposition using the Doolitle algorithm

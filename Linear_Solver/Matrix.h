@@ -21,7 +21,7 @@ public:
 
 	// Access specific elements
 	T get_value(int row_number, int col_number, bool verbose);
-
+	
 	void set_value(int row_number, int col_number, T value);
 
     // Load in matrix case
