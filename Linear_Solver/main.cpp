@@ -29,8 +29,8 @@ int main() {
 		L->values[i] = 0;
 	}
 
-	A->printMatrix();
-	L->printMatrix();
+	A->print();
+	L->print();
 
 	std::cout << "Cholesky decomposition" << std::endl;
 
@@ -50,7 +50,7 @@ int main() {
 		}
 	}
 
-	L->printMatrix();
+	L->print();
 
 	delete A;
 	delete L;
