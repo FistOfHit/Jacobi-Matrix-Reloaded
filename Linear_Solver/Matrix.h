@@ -22,8 +22,6 @@ public:
 	// Access specific elements
 	T get_value(int row_number, int col_number, bool verbose);
 
-	// Access entire rows or collumns
-	Matrix<T>* get_value(int row_number, std::string dimension, bool verbose);
 
 	// Perform some operations with our matrix
 	//virtual void matMatMult(Matrix& mat_right, Matrix& output);
