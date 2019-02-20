@@ -1,10 +1,11 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <typeinfo>
 #include "Matrix.h"
 
 
-// Constructor for zero array
+ //Constructor for zero array
 template <class T>
 Matrix<T>::Matrix(int num_rows, int num_cols, bool self_allocate):  num_rows(num_rows), num_cols(num_cols),
                                                                     num_values(num_rows * num_cols), self_allocate(self_allocate)  {
@@ -49,7 +50,7 @@ void Matrix<T>::print() {
 	// Size of whats being printed
     std::cout << "Matrix: " << this->num_rows << " X " << this->num_cols << std::endl;
     // Data type of array
-    std::cout << "Dtype: " << typeid(this->values[0]).name() << std::endl;
+    std::cout << "Data type: " << typeid(this->values[0]).name() << std::endl;
 
 
 	// Print row by row
@@ -110,118 +111,6 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 
 }
 
-
-// Return a matrix containing a selected row or collum of another matrix
-template <class T>
-Matrix<T>* Matrix<T>::get_value(int line_number, std::string dimension, bool verbose) {
-
-
-	// Creating a new row matrix
-	if (dimension == "row") {
-
-
-		// Check if this row exists
-		if ((line_number < 0) || (line_number >= this->num_rows)) {
-
-			std::cout << "Row " << line_number << " is invalid for a matrix with "
-				   	  << this->num_rows << " rows." << std::endl
-					  << "Exiting." << std::endl;
-			return nullptr;
-
-		}
-
-
-		// Create new row matrix
-		Matrix<T> new_row = Matrix<T>(1, this->num_cols, true);
-
-
-		// Assign the appropriate values
-		for (int i = 0; i < this->num_cols; i++) {
-			new_row->values[i] = this->values[(line_number * this->num_cols) + i];
-		}
-
-
-		// Print new row if verbosity
-		if (verbose) {
-
-
-			std::cout << "Row " << line_number << " = [";
-
-
-			for (int i = 0; i < this->num_cols-1; i++) {
-				std::cout << new_row->values[i] << ", ";
-			}
-
-
-			std::cout << new_row->values[this->num_cols-1] << "]" << std::endl;
-
-
-		}
-
-
-		// Return the pointer to it
-		return &new_row;
-
-
-	// Creating a new collumn matrix
-	} else if (dimension == "collumn") {
-
-
-		// Check if this collumn exists
-		if ((line_number < 0) || (line_number >= this->num_cols)) {
-
-			std::cout << "Collumn " << line_number << " is invalid for a matrix with "
-					  << this->num_cols << " collumn." << std::endl
-					  << "Exiting." << std::endl;
-			return nullptr;
-
-		}
-
-
-		// Create new collumn matrix
-		Matrix<T> new_col = Matrix<T>(this->num_rows, 1, true);
-
-
-		// Assign the appropriate values
-		for (int i = 0; i < this->num_cols; i++) {
-			new_col->values[i] = this->values[(i * this->num_cols) + line_number];
-		}
-
-
-		// Print new collumn if verbosity
-		if (verbose) {
-
-
-			std::cout << "Collumn " << line_number << " = [";
-
-
-			for (int i = 0; i < this->num_rows - 1; i++) {
-				std::cout << new_col->values[i] << ", ";
-			}
-
-
-			std::cout << new_col->values[this->num_rows - 1] << "]" << std::endl;
-
-
-		}
-
-
-		// Return the pointer to it
-		return &new_col;
-
-
-	// If the dimension isnt correct
-	} else {
-
-		std::cout << dimension << " is not recognised as a dimension"
-			      << ", either input 'row' or 'collumn' as a string." << std::endl
-				  << "Returning null pointer." << std::endl;
-		return nullptr;
-
-	}
-	
-
-}
 
 
 
