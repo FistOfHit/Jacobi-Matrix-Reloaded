@@ -1,34 +1,42 @@
 #pragma once
+#include <string>
 
 template <class T>
-class Matrix
-{
+class Matrix {
+
+
 public:
 
-   // Create and allocate the memory, zero array
-   Matrix(int num_rows, int num_cols, bool self_allocate);
+	// Create and allocate the memory, zero array
+	Matrix(int num_rows, int num_cols, bool self_allocate);
 
-   // Create and point to memory already allocated before
-   Matrix(int num_rows, int num_cols, T *values_ptr);#
+	// Create and point to memory already allocated before
+	Matrix(int num_rows, int num_cols, T *values_ptr);
 
-   // destructor
-   virtual ~Matrix();
+	// destructor
+	virtual ~Matrix();
 
-   // Print out the values in our matrix
-   void printValues();
-   virtual void printMatrix();
+	// Print out the values in our matrix
+	void print();
 
-   // Perform some operations with our matrix
-   virtual void matMatMult(Matrix& mat_right, Matrix& output);
+	// Access specific elements
+	T get_value(int row_number, int col_number, bool verbose);
 
-   // Initialise matrix attributes
-   T *elements= nullptr;
-   int num_rows = -1;
-   int num_cols = -1;
-   int num_elements = -1;
+	// Access entire rows or collumns
+	Matrix<T>* get_value(int row_number, std::string dimension, bool verbose);
+
+	// Perform some operations with our matrix
+	//virtual void matMatMult(Matrix& mat_right, Matrix& output);
+
+	// Initialise matrix attributes
+	T *values = nullptr;
+	int num_rows = -1;
+	int num_cols = -1;
+	int num_values = -1;
 
 private:
 
-   bool self_allocate
+	bool self_allocate;
    
+
 };
