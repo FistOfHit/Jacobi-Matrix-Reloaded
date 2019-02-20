@@ -68,6 +68,9 @@ void Matrix<T>::print() {
     }
 
 
+	std::cout << std::endl;
+
+
 }
 
 
@@ -88,7 +91,7 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 	if ((col_number < 0) || (col_number >= this->num_cols)) {
 
 		std::cout << "Collumn " << col_number << " is invalid for a matrix with "
-			<< this->num_cols << " collumns." << std::endl
+			<< this->num_cols << " columns." << std::endl
 			<< "Returning -1." << std::endl;
 		return -1;
 
@@ -107,12 +110,129 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 
 
 	return required_element;
+}
+
+   // Now we can do our matrix-matrix multiplication
+   // CHANGE THIS FOR LOOP ORDERING AROUND
+   // AND CHECK THE TIME SPENT
+   // Does the ordering matter for performance. Why??
+
+//template <class T>
+//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
+//{
+//
+//   // Check our dimensions match
+//   if (this->num_cols != mat_right.num_rows)
+//   {
+//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
+//      return;
+//   }
+//
+//   // Check if our output matrix has had space allocated to it
+//   if (output.values != nullptr) 
+//   {
+//      // Check our dimensions match
+//      if (this->rows != output.rows || this->cols != output.cols)
+//      {
+//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
+//         return;
+//      }      
+//   }
+//   // The output hasn't been preallocated, so we are going to do that
+//   else
+//   {
+//      output.values = new T[this->rows * mat_right.cols];
+//   }
+//
+//   // Set values to zero before hand
+//   for (int i = 0; i < output.size_of_values; i++)
+//   {
+//      output.values[i] = 0;
+//   }
+
+template <class T>
+void Matrix<T>::set_value(int row_number, int col_number, T value) {
+
+
+	// Checking if the element actually exists
+	if ((row_number < 0) || (row_number >= this->num_rows)) {
+
+		std::cout << "Row " << row_number << " is invalid for a matrix with "
+			<< this->num_rows << " rows." << std::endl
+			<< "Exiting." << std::endl;
+		return;
+
+	}
+	if ((col_number < 0) || (col_number >= this->num_cols)) {
+
+		std::cout << "Collumn " << col_number << " is invalid for a matrix with "
+			<< this->num_cols << " collumns." << std::endl
+			<< "Exiting." << std::endl;
+		return;
+
+	}
+
+
+	this->values[(row_number * this->num_cols) + col_number] = value;
 
 
 }
 
 
 
+template <class T>
+void Matrix<T>::mat_load(char name)
+{
+	if (name == 'A') { // LU Decomposition
+		this->values[0] = 2;
+		this->values[1] = -1;
+		this->values[2] = -2;
+		this->values[3] = -4;
+		this->values[4] = 6;
+		this->values[5] = 3;
+		this->values[6] = -4;
+		this->values[7] = -2;
+		this->values[8] = 8;
+	}
+	else if (name == 'B') { // Cholesky
+		this->values[0] = 4;
+		this->values[1] = 12;
+		this->values[2] = -16;
+		this->values[3] = 12;
+		this->values[4] = 37;
+		this->values[5] = -43;
+		this->values[6] = -16;
+		this->values[7] = -43;
+		this->values[8] = 98;
+	}
+	else if (name == 'C') { // Upper Empty
+		for (int i = 0; i < 9; i++) {
+			this->values[i] = 0;
+		}
+	}
+	else if (name == 'D') { // Lower Identity
+		for (int i = 0; i < this->num_rows; i++) {
+			for (int j = 0; j < this->num_cols; j++) {
+				if (i == j) {
+					this->values[i * this->num_rows + j] = 1;
+				}
+				else {
+					this->values[i * this->num_rows + j] = 0;
+				}
+			}
+		}
+	}
+	else if (name == 'E') { // y and x empty
+		for (int i = 0; i < 3; i++) {
+			this->values[i] = 0;
+		}
+	}
+	else if (name == 'F') { // B 
+		this->values[0] = 3;
+		this->values[1] = 2;
+		this->values[2] = 1;
+	}
+}
 
 
 
@@ -166,3 +286,4 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 //      }
 //   }
 //}
+

@@ -2,43 +2,39 @@
 #include <math.h>
 #include <time.h>
 #include "Matrix.cpp"
-
-
-using namespace std;
+#include "jacobi.h"
+#include <assert.h>
 
 
 void creation_tests() {
-
-
 	// Lets test if we can create a matrix and then
 	// allocate values to it that were allocated before.
-	cout << "----------Test: Create pre-allocated matrix----------" << endl;
+	std::cout << "----------Test: Create pre-allocated matrix----------" << std::endl;
 
 	// Manually allocating array
 	int prealloc_test_array[25];
-	for (int i = 0; i < 25; i++) { prealloc_test_array[i] = i+1; }
+	for (int i = 0; i < 25; i++) { prealloc_test_array[i] = i + 1; }
 
 	// Creating a matrix
-	Matrix<int>test_matrix(5, 5, prealloc_test_array);
+	Matrix<int>test_matrix1(5, 5, prealloc_test_array);
 
-	cout << "Expected print out: " << endl << endl
-		 << "Matrix 5 X 5" << endl
-		 << "Data type: int" << endl
-		 << "1 2 3 4 5" << endl
-		 << "6 7 8 9 10" << endl
-		 << "11 12 13 14 15" << endl
-		 << "16 17 18 19 20" << endl
-		 << "21 22 23 24 25" << endl;
+	std::cout << "Expected print out: " << std::endl << std::endl
+		<< "Matrix 5 X 5" << std::endl
+		<< "Data type: int" << std::endl
+		<< "1 2 3 4 5" << std::endl
+		<< "6 7 8 9 10" << std::endl
+		<< "11 12 13 14 15" << std::endl
+		<< "16 17 18 19 20" << std::endl
+		<< "21 22 23 24 25" << std::endl;
 
-	test_matrix.print();
-
+	test_matrix1.print();
 
 	// Lets test if we can create an empty matrix
 	// (full of zeros) and print it out
-	cout << "----------Test: Create empty zeros matrix----------" << endl;
+	std::cout << "----------Test: Create empty zeros matrix----------" << std::endl;
 
 	// Creating a matrix
-	Matrix<int>test_matrix(5, 5, true);
+	Matrix<int>test_matrix2(5, 5, true);
 
 	cout << "Expected print out: " << endl << endl
 		 << "Matrix 5 X 5" << endl
@@ -49,75 +45,205 @@ void creation_tests() {
 		 << "0 0 0 0 0" << endl
 		 << "0 0 0 0 0" << endl;
 
-	test_matrix.print();
+	test_matrix2.print();
 
+	Matrix<int>test_matrix_2(5, 5, true);
+
+	std::cout << "Expected print out: " << std::endl << std::endl
+		<< "Matrix 5 X 5" << std::endl
+		<< "Data type: int" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl;
+
+	test_matrix_2.print();
 
 }
+
 
 void run_tests() {
-
 	creation_tests();
-
 }
 
 
-
-int index_convert(int row_ind, int col_ind, int row_count) {
-	return row_ind * row_count + col_ind;
+// Performs Cholesky decomposition by reference
+Matrix<double>* form_cholesky(Matrix<double> *A, Matrix<double> *L) {
+	assert(A->num_rows == A->num_cols);
+	for (int i = 0; i < A->num_rows; i++) {
+			for (int j = 0; j < (i + 1); j++){
+				double s = 0;
+				for (int k = 0; k < j; k++) {
+					s += (L->values[i * A->num_rows + k] * L->values[j * A->num_rows + k]);
+				}
+				if (i == j) {
+					L->values[i * A->num_rows + j] = sqrt(A->values[i * A->num_rows + i] - s);
+					}
+				else{
+					L->values[i * A->num_rows + j] = (1.0 / L->values[j * A->num_rows + j] * (A->values[i * A->num_rows + j] - s));
+					}
+			}
+		}
+	return L;
 }
 
-int main() {
 
+void form_LUD(Matrix<double> *A, Matrix<double> *U, Matrix<double> *L) {
+	assert (A->num_rows == A->num_cols);
+	for (int j=0; j < A->num_cols; j++){
+		for (int i = 0; i < j + 1; i++) {
+			double s1 = 0;
 
-	// If you want to run the tests
-	//run_tests();
+			for (int k = 0; k < i; k++) {
+				s1 += U->values[k * A->num_rows + j] * L->values[i * A->num_rows + k];
+			}
+			U->values[i * A->num_rows + j] = A->values[i * A->num_rows + j] - s1;
+		}
+		for (int i = j; i < A->num_cols; i++){
+			double s2 = 0;
+				for (int k=0; k<j; k++){
+					s2 += U->values[k * A->num_rows + j] * L->values[i * A->num_rows + k];
+				}
+				L->values[i * A->num_rows + j] = (A->values[i * A->num_rows + j] - s2) / U->values[j * A->num_rows + j];
+		}
+	}
+}
 
-
-	int rows = 3;
+	/*int rows = 3;
 	int cols = 3;
 	auto *A = new Matrix<double>(rows, cols, true);
 	auto *L = new Matrix<double>(rows, cols, true);
 
-	A->values[0] = 4;
-	A->values[1] = 12;
-	A->values[2] = -16;
-	A->values[3] = 12;
-	A->values[4] = 37;
-	A->values[5] = -43;
-	A->values[6] = -16;
-	A->values[7] = -43;
-	A->values[8] = 98;
-
-	for (int i = 0; i < 9; i++) {
-		L->values[i] = 0;
-	}
-
-	A->print();
-	L->print();
-
-	std::cout << "Cholesky decomposition" << std::endl;
-
-	
-	for (int i = 0; i < rows; i++){
-		for (int j = 0; j < (i + 1); j++){
+// Performs forwards substitution by reference
+Matrix<double>* forward_substitution(Matrix<double> *L, Matrix<double> *B, Matrix<double> *y){
+	assert(L->num_rows == L->num_cols);
+	for (int i = 0; i < L-> num_rows; i++) {
+		if (i == 0) {
+			y->values[i] = B->values[i] / L->values[i  * L->num_rows + i];
+		}
+		else if (i != 0) {
 			double s = 0;
-			for (int k = 0; k < j; k++) {
-				s += (L->values[i * rows + k] * L->values[j * rows + k]);
+			for (int j = 0; j < i; j++) {
+				s += L->values[i * L->num_rows + j] * y->values[j];
 			}
-			if (i == j) {
-				L->values[i * rows + j] = sqrt(A->values[i * rows + i] - s);
-				}
-			else{
-				L->values[i * rows + j] = (1.0 / L->values[j * rows + j] * (A->values[i * rows + j] - s));
-				}
+			y->values[i] = (1 / L->values[i * L->num_rows + i]) * (B->values[i] - s);
 		}
 	}
+	return y;
+}
 
-	L->print();
+
+// Performs backwards substutition by reference
+Matrix<double>* backwards_substitution(Matrix<double> *U, Matrix<double> *y, Matrix<double> *x) {
+	assert(U->num_rows == U->num_cols);
+	for (int i = U->num_rows; i > -1; i--) {
+		if (i == U->num_rows - 1) {
+			x->values[U->num_rows - 1] = y->values[U->num_rows - 1] / U->values[i *  U->num_rows + i];
+		}
+		else if (i != U->num_rows) {
+			double s = 0;
+			for (int j = 0; j < U->num_cols; j++) {
+				s += U->values[i* U->num_rows + j] * x->values[j];
+			}
+			x->values[i] = (1 / U->values[i* U->num_rows + i]) * (y->values[i] - s);
+		}
+	}
+	return x;
+}
+
+
+int main() {
+	int rows = 3;
+	int cols = 3;
 
 	delete A;
-	delete L;
+	delete L;*/
+	//run_tests(); // If you want to run the tests
 
+	// Performs Lower Upper decomposition using the Doolitle algorithm
+	// Initialising neccessary matrices
+	auto *A = new Matrix<double>(rows, cols, true);
+	auto *C = new Matrix<double>(rows, cols, true);
+	auto *L = new Matrix<double>(rows, cols, true);
+	auto *U = new Matrix<double>(rows, cols, true);
+	auto *y = new Matrix<double>(1, 3, true);
+	auto *B = new Matrix<double>(1, 3, true);
+	auto *x = new Matrix<double>(1, 3, true);
+
+	// Load example case
+	A->mat_load('A'); // A is  LUD, A is non-symmetric
+	C->mat_load('B'); // C is  LUD, B is lower Cholesky decomposiiton
+	U->mat_load('C'); // U is  LUD, B is Upper triangular Empty
+	L->mat_load('D'); // L is  LUD, D is Lower triangular identity
+	B->mat_load('F'); // B is [3, 2, 1]
+	y->mat_load('E'); // y is empty (1, 3)
+	x->mat_load('E'); // x is empty (1, 3)
+	
+	//L = form_cholesky(C, L);   /////////////// Need to write transpose to implement this
+
+	// Decompose into upper and lower triagular matrices
+	form_LUD(A, U, L); 
+	// Forward substitution
+	y = forward_substitution(L, B, y);
+	// Backward substitution
+	x = backwards_substitution(U, y, x);
+	// Show solution
+	x->print();
+
+	/*Matrix<double> test_LHS(4, 4, true);
+	test_LHS.set_value(0, 0, 10); 
+	test_LHS.set_value(0, 1, -1);
+	test_LHS.set_value(0, 2, 2);
+	test_LHS.set_value(0, 3, 0);
+	test_LHS.set_value(1, 0, -1);
+	test_LHS.set_value(1, 1, 11);
+	test_LHS.set_value(1, 2, -1);
+	test_LHS.set_value(1, 3, 3);
+	test_LHS.set_value(2, 0, 2);
+	test_LHS.set_value(2, 1, -1);
+	test_LHS.set_value(2, 2, 10);
+	test_LHS.set_value(2, 3, -1);
+	test_LHS.set_value(3, 0, 0);
+	test_LHS.set_value(3, 1, 3);
+	test_LHS.set_value(3, 2, -1);
+	test_LHS.set_value(3, 3, 8);
+
+
+	test_LHS.print();
+
+	Matrix<double> test_RHS(4, 1, true);
+	test_RHS.set_value(0, 0, 6);
+	test_RHS.set_value(1, 0, 25);
+	test_RHS.set_value(2, 0, -11);
+	test_RHS.set_value(3, 0, 15);
+
+	test_RHS.print();
+
+	Matrix<double> test_solution(4, 1, true);
+	jacobi(test_LHS, test_solution, test_RHS, 5);
+
+	test_solution.print();*/
+
+	Matrix<double> test_LHS(2, 2, true);
+	test_LHS.set_value(0, 0, 2);
+	test_LHS.set_value(0, 1, 1);
+	test_LHS.set_value(1, 0, 5);
+	test_LHS.set_value(1, 1, 7);
+
+	test_LHS.print();
+
+	Matrix<double> test_RHS(2, 1, true);
+	test_RHS.set_value(0, 0, 11);
+	test_RHS.set_value(1, 0, 13);
+
+	test_RHS.print();
+
+	Matrix<double> test_solution(2, 1, true);
+
+	jacobi(test_LHS, test_solution, test_RHS, 100);
+
+	test_solution.print();
 
 	system("pause");
 }
