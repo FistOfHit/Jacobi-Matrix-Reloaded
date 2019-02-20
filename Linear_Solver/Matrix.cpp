@@ -1,112 +1,151 @@
+#pragma once
 #include <iostream>
+#include <string>
+#include <typeinfo>
 #include "Matrix.h"
 
-// Constructor - using an initialisation list here
+
+ //Constructor for zero array
 template <class T>
-Matrix<T>::Matrix(int rows, int cols, bool preallocate): rows(rows), cols(cols), size_of_values(rows * cols), preallocated(preallocate)
-{
-   // If we want to handle memory ourselves
-   if (this->preallocated)
-   {
-      // Must remember to delete this in the destructor
-      this->values = new T[size_of_values];
-   }
+Matrix<T>::Matrix(int num_rows, int num_cols, bool self_allocate):  num_rows(num_rows), num_cols(num_cols),
+                                                                    num_values(num_rows * num_cols), self_allocate(self_allocate)  {
+
+   if (self_allocate) {    
+
+      // Destructor will handle deletion
+      this->values = new T[this->num_values];
+
+      for (int i = 0; i < this->num_values; i++) {
+		  this->values[i] = 0;
+      }
+
+   } 
+
 }
 
-// Constructor - now just setting the value of our T pointer
-template <class T>
-Matrix<T>::Matrix(int rows, int cols, T *values_ptr): rows(rows), cols(cols), size_of_values(rows * cols), values(values_ptr)
-{}
 
-// destructor
+// Constructor for already allocated array
 template <class T>
-Matrix<T>::~Matrix()
-{
-   // Delete the values array
-   if (this->preallocated){
+Matrix<T>::Matrix(int num_rows, int num_cols, T *ptr_to_array): num_rows(num_rows), num_cols(num_cols),
+															    num_values(num_rows * num_cols), values(ptr_to_array) {}
+
+
+// Destructor - deallocates memory
+template <class T>
+Matrix<T>::~Matrix() {
+
+   // Delete the array
+   if (this->self_allocate) {
       delete[] this->values;
    }
+
 }
 
-// Just print out the values in our values array
+
+// Print out matrix values in a nice, human readable manner
 template <class T>
-void Matrix<T>::printValues() 
-{ 
-   std::cout << "Printing values" << std::endl;
-	for (int i = 0; i< this->size_of_values; i++)
-   {
-      std::cout << this->values[i] << " ";
-   }
-   std::cout << std::endl;
+void Matrix<T>::print() { 
+
+
+	// Size of whats being printed
+    std::cout << "Matrix: " << this->num_rows << " X " << this->num_cols << std::endl;
+    // Data type of array
+    std::cout << "Data type: " << typeid(this->values[0]).name() << std::endl;
+
+
+	// Print row by row
+    int row_number;
+    for (int i = 0; i < this->num_rows; i++) {  
+
+		row_number = i * this->num_cols;
+ 
+		for (int j = 0; j < this->num_cols; j++) {
+			std::cout << this->values[row_number + j] << " ";
+		}
+
+		std::cout << std::endl;
+
+    }
+
+
 }
 
-// Explicitly print out the values in values array as if they are a matrix
+
+// Return a specific element of the matrix
 template <class T>
-void Matrix<T>::printMatrix() 
-{ 
-   std::cout << "Printing matrix" << std::endl;
-   for (int j = 0; j< this->rows; j++)
-   {  
-      std::cout << std::endl;
-      for (int i = 0; i< this->cols; i++)
-      {
-         // We have explicitly used a row-major ordering here
-         std::cout << this->values[i + j * this->cols] << " ";
-      }
-   }
-   std::cout << std::endl;
+T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
+
+
+	// Checking if the element actually exists
+	if ((row_number < 0) || (row_number >= this->num_rows)) {
+
+		std::cout << "Row " << row_number << " is invalid for a matrix with "
+				  << this->num_rows << " rows." << std::endl
+				  << "Returning -1." << std::endl;
+		return -1;
+
+	}
+	if ((col_number < 0) || (col_number >= this->num_cols)) {
+
+		std::cout << "Collumn " << col_number << " is invalid for a matrix with "
+			<< this->num_cols << " columns." << std::endl
+			<< "Returning -1." << std::endl;
+		return -1;
+
+	}
+
+
+	// Creating memory for the element and finding it
+	T required_element = this->values[(row_number * this->num_cols) + col_number];
+
+
+	// If user wants it printed at runtime
+	if (verbose) {
+		std::cout << "Value at [" << row_number << "][" << col_number << "] = "
+				  << required_element << std::endl;
+	}
+
+
+	return required_element;
 }
-
-// Do matrix matrix multiplication
-// output = this * mat_right
-template <class T>
-void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
-{
-
-   // Check our dimensions match
-   if (this->cols != mat_right.rows)
-   {
-      std::cerr << "Input dimensions for matrices don't match" << std::endl;
-      return;
-   }
-
-   // Check if our output matrix has had space allocated to it
-   if (output.values != nullptr) 
-   {
-      // Check our dimensions match
-      if (this->rows != output.rows || this->cols != output.cols)
-      {
-         std::cerr << "Input dimensions for matrices don't match" << std::endl;
-         return;
-      }      
-   }
-   // The output hasn't been preallocated, so we are going to do that
-   else
-   {
-      output.values = new T[this->rows * mat_right.cols];
-   }
-
-   // Set values to zero before hand
-   for (int i = 0; i < output.size_of_values; i++)
-   {
-      output.values[i] = 0;
-   }
 
    // Now we can do our matrix-matrix multiplication
    // CHANGE THIS FOR LOOP ORDERING AROUND
    // AND CHECK THE TIME SPENT
    // Does the ordering matter for performance. Why??
-   for(int i = 0; i < this->rows; i++)
-   {
-      for(int k = 0; k < this->cols; k++)
-      {
-         for(int j = 0; j < mat_right.cols; j++)
-         {            
-               output.values[i * output.cols + j] += this->values[i * this->cols + k] * mat_right.values[k * mat_right.cols + j];
-         }
-      }
-   }
-}
+
+//template <class T>
+//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
+//{
+//
+//   // Check our dimensions match
+//   if (this->num_cols != mat_right.num_rows)
+//   {
+//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
+//      return;
+//   }
+//
+//   // Check if our output matrix has had space allocated to it
+//   if (output.values != nullptr) 
+//   {
+//      // Check our dimensions match
+//      if (this->rows != output.rows || this->cols != output.cols)
+//      {
+//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
+//         return;
+//      }      
+//   }
+//   // The output hasn't been preallocated, so we are going to do that
+//   else
+//   {
+//      output.values = new T[this->rows * mat_right.cols];
+//   }
+//
+//   // Set values to zero before hand
+//   for (int i = 0; i < output.size_of_values; i++)
+//   {
+//      output.values[i] = 0;
+//   }
 
 
 
@@ -141,13 +180,13 @@ void Matrix<T>::mat_load(char name)
 		}
 	}
 	else if (name == 'D') { // Lower Identity
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
+		for (int i = 0; i < this->num_rows; i++) {
+			for (int j = 0; j < this->num_cols; j++) {
 				if (i == j) {
-					this->values[i * rows + j] = 1;
+					this->values[i * this->num_rows + j] = 1;
 				}
 				else {
-					this->values[i * rows + j] = 0;
+					this->values[i * this->num_rows + j] = 0;
 				}
 			}
 		}
@@ -163,3 +202,57 @@ void Matrix<T>::mat_load(char name)
 		this->values[2] = 1;
 	}
 }
+
+
+
+//// Do matrix matrix multiplication
+//// output = this * mat_right
+//template <class T>
+//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
+//{
+//
+//   // Check our dimensions match
+//   if (this->num_cols != mat_right.num_rows)
+//   {
+//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
+//      return;
+//   }
+//
+//   // Check if our output matrix has had space allocated to it
+//   if (output.values != nullptr) 
+//   {
+//      // Check our dimensions match
+//      if (this->rows != output.rows || this->cols != output.cols)
+//      {
+//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
+//         return;
+//      }      
+//   }
+//   // The output hasn't been preallocated, so we are going to do that
+//   else
+//   {
+//      output.values = new T[this->rows * mat_right.cols];
+//   }
+//
+//   // Set values to zero before hand
+//   for (int i = 0; i < output.size_of_values; i++)
+//   {
+//      output.values[i] = 0;
+//   }
+//
+//   // Now we can do our matrix-matrix multiplication
+//   // CHANGE THIS FOR LOOP ORDERING AROUND
+//   // AND CHECK THE TIME SPENT
+//   // Does the ordering matter for performance. Why??
+//   for(int i = 0; i < this->rows; i++)
+//   {
+//      for(int k = 0; k < this->cols; k++)
+//      {
+//         for(int j = 0; j < mat_right.cols; j++)
+//         {            
+//               output.values[i * output.cols + j] += this->values[i * this->cols + k] * mat_right.values[k * mat_right.cols + j];
+//         }
+//      }
+//   }
+//}
+
