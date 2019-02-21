@@ -5,6 +5,9 @@
 #include "Matrix.h"
 
 
+using namespace std;
+
+
  //Constructor for zero array
 template <class T>
 Matrix<T>::Matrix(int num_rows, int num_cols, bool self_allocate):  num_rows(num_rows), num_cols(num_cols),
@@ -196,55 +199,178 @@ void Matrix<T>::mat_load(char name)
 }
 
 
-
-//// Do matrix matrix multiplication
-//// output = this * mat_right
 //template <class T>
-//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
-//{
+//void Matrix<T>::operator=(const Matrix<T> &matrix_RHS) {
 //
-//   // Check our dimensions match
-//   if (this->num_cols != mat_right.num_rows)
-//   {
-//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//      return;
-//   }
+//	num_rows = matrix_RHS.num_rows;
+//	num_cols = matrix_RHS.num_cols;
+//	num_values = matrix_RHS.num_values;
+//	self_allocate = matrix_RHS.self_allocate;
+//	values = matrix_RHS.values;
 //
-//   // Check if our output matrix has had space allocated to it
-//   if (output.values != nullptr) 
-//   {
-//      // Check our dimensions match
-//      if (this->rows != output.rows || this->cols != output.cols)
-//      {
-//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//         return;
-//      }      
-//   }
-//   // The output hasn't been preallocated, so we are going to do that
-//   else
-//   {
-//      output.values = new T[this->rows * mat_right.cols];
-//   }
+//}
 //
-//   // Set values to zero before hand
-//   for (int i = 0; i < output.size_of_values; i++)
-//   {
-//      output.values[i] = 0;
-//   }
 //
-//   // Now we can do our matrix-matrix multiplication
-//   // CHANGE THIS FOR LOOP ORDERING AROUND
-//   // AND CHECK THE TIME SPENT
-//   // Does the ordering matter for performance. Why??
-//   for(int i = 0; i < this->rows; i++)
-//   {
-//      for(int k = 0; k < this->cols; k++)
-//      {
-//         for(int j = 0; j < mat_right.cols; j++)
-//         {            
-//               output.values[i * output.cols + j] += this->values[i * this->cols + k] * mat_right.values[k * mat_right.cols + j];
-//         }
-//      }
-//   }
+//
+//template <class T>
+//Matrix<T> Matrix<T>::operator*(const Matrix<T> &matrix_RHS) {
+//
+//
+//	// Creating output matrix
+//	Matrix<T> output_matrix(this->num_rows, matrix_RHS.num_cols, true);
+//
+//
+//	// Checking if dimensions are compatible
+//	if (this->num_rows != matrix_RHS.num_cols) {
+//		cout << "left matrix with " << this->num_rows
+//			 << " cannot be multiplied by a right matrix with " 
+//			 << matrix_RHS.num_cols << " collumns." << endl
+//			 << "Please check the dimensions of your operands." << endl
+//			 << "Returning " << this->num_rows << " X " << matrix_RHS.num_cols
+//			 << " matrix of zeros. " << endl;
+//		return output_matrix;
+//	}
+//
+//	
+//	int sum;
+//	// Variables for indexing our rows, saves a lot of computation
+//	int right_row_index;
+//	int left_row_index;
+//	int output_row_index;
+//
+//
+//	// Rows in left operand
+//	for (int i = 0; i < this->num_rows; i++) {
+//
+//		left_row_index = i * this->num_cols;
+//		output_row_index = i * matrix_RHS.num_cols;
+//
+//		// Collumns in right operand
+//		for (int j = 0; j < matrix_RHS.num_cols; j++) {
+//
+//			sum = 0;
+//
+//			// Iterating through each element
+//			for (int k = 0; k < this->num_rows; k++) {
+//
+//				right_row_index = k * matrix_RHS.num_cols;
+//				sum += (this->values[left_row_index + k] * matrix_RHS.values[right_row_index + j]);
+//
+//			}
+//
+//			output_matrix.values[output_row_index + j] = sum;
+//
+//		}
+//
+//	}
+//
+//
+//	return output_matrix;
+//
+//
+//}
+//
+//
+//template <class T>
+//Matrix<T> Matrix<T>::operator+(const Matrix<T> &matrix_RHS) {
+//
+//
+//	// Creating output matrix
+//	Matrix<T> output_matrix(this->num_rows, this->num_cols, true);
+//
+//
+//	// Checking if dimensions are compatible
+//	if (this->num_rows != matrix_RHS.num_rows) {
+//		cout << "left matrix with " << this->num_rows
+//			 << " rows cannot be added to a right matrix with "
+//			 << matrix_RHS.num_rows << " rows." << endl
+//			 << "Please check the dimensions of your operands." << endl
+//			 << "Returning " << this->num_rows << " X " << this->num_cols
+//			 << " matrix of zeros. " << endl;
+//		return output_matrix;
+//	}
+//	if (this->num_cols != matrix_RHS.num_cols) {
+//		cout << "left matrix with " << this->num_cols
+//			 << " collumns cannot be added to a right matrix with "
+//			 << matrix_RHS.num_cols << " collumns." << endl
+//			 << "Please check the dimensions of your operands." << endl
+//			 << "Returning " << this->num_rows << " X " << this->num_cols
+//			 << " matrix of zeros. " << endl;
+//		return output_matrix;
+//	}
+//
+//
+//	// Variables for indexing our rows, saves a lot of computation
+//	int row_index;
+//
+//
+//	// Rows in left operand
+//	for (int i = 0; i < this->num_rows; i++) {
+//
+//		row_index = i * this->num_cols;
+//
+//		// Collumns in right operand
+//		for (int j = 0; j < matrix_RHS.num_cols; j++) {
+//			output_matrix.values[row_index + j] = this->values[row_index + j] + matrix_RHS.values[row_index + j];
+//		}
+//
+//	}
+//
+//
+//	return output_matrix;
+//
+//
+//}
+//
+//
+//template <class T>
+//Matrix<T> Matrix<T>::operator-(const Matrix<T> &matrix_RHS) {
+//
+//
+//	// Creating output matrix
+//	Matrix<T> output_matrix(this->num_rows, this->num_cols, true);
+//
+//
+//	// Checking if dimensions are compatible
+//	if (this->num_rows != matrix_RHS.num_rows) {
+//		cout << "right matrix with " << matrix_RHS.num_rows
+//			 << " rows cannot be subtracted from a left matrix with "
+//			 << this->num_rows << " rows." << endl
+//			 << "Please check the dimensions of your operands." << endl
+//			 << "Returning " << this->num_rows << " X " << this->num_cols
+//			 << " matrix of zeros. " << endl;
+//		return output_matrix;
+//	}
+//	if (this->num_cols != matrix_RHS.num_cols) {
+//		cout << "right matrix with " << matrix_RHS.num_cols
+//			 << " collumns cannot be subtracted from a left matrix with "
+//			 << this->num_cols << " collumns." << endl
+//			 << "Please check the dimensions of your operands." << endl
+//			 << "Returning " << this->num_rows << " X " << this->num_cols
+//			 << " matrix of zeros. " << endl;
+//		return output_matrix;
+//	}
+//
+//
+//	// Variables for indexing our rows, saves a lot of computation
+//	int row_index;
+//
+//
+//	// Rows in left operand
+//	for (int i = 0; i < this->num_rows; i++) {
+//
+//		row_index = i * this->num_cols;
+//
+//		// Collumns in right operand
+//		for (int j = 0; j < matrix_RHS.num_cols; j++) {
+//			output_matrix.values[row_index + j] = this->values[row_index + j] - matrix_RHS.values[row_index + j];
+//		}
+//
+//	}
+//
+//
+//	return output_matrix;
+//
+//
 //}
 
