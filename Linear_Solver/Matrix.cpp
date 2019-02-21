@@ -87,7 +87,7 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 	}
 	if ((col_number < 0) || (col_number >= this->num_cols)) {
 
-		std::cout << "Collumn " << col_number << " is invalid for a matrix with "
+		std::cout << "Column " << col_number << " is invalid for a matrix with "
 			<< this->num_cols << " columns." << std::endl
 			<< "Returning -1." << std::endl;
 		return -1;
@@ -109,50 +109,11 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 	return required_element;
 }
 
-   // Now we can do our matrix-matrix multiplication
-   // CHANGE THIS FOR LOOP ORDERING AROUND
-   // AND CHECK THE TIME SPENT
-   // Does the ordering matter for performance. Why??
-
-//template <class T>
-//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
-//{
-//
-//   // Check our dimensions match
-//   if (this->num_cols != mat_right.num_rows)
-//   {
-//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//      return;
-//   }
-//
-//   // Check if our output matrix has had space allocated to it
-//   if (output.values != nullptr) 
-//   {
-//      // Check our dimensions match
-//      if (this->rows != output.rows || this->cols != output.cols)
-//      {
-//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//         return;
-//      }      
-//   }
-//   // The output hasn't been preallocated, so we are going to do that
-//   else
-//   {
-//      output.values = new T[this->rows * mat_right.cols];
-//   }
-//
-//   // Set values to zero before hand
-//   for (int i = 0; i < output.size_of_values; i++)
-//   {
-//      output.values[i] = 0;
-//   }
-
-
 
 template <class T>
 void Matrix<T>::mat_load(char name)
 {
-	if (name == 'A') { // LU Decomposition
+	if (name == 'A') { // LU Decomposition example
 		this->values[0] = 2;
 		this->values[1] = -1;
 		this->values[2] = -2;
@@ -163,7 +124,12 @@ void Matrix<T>::mat_load(char name)
 		this->values[7] = -2;
 		this->values[8] = 8;
 	}
-	else if (name == 'B') { // Cholesky
+	else if (name == 'B') { // B 
+		this->values[0] = 3;
+		this->values[1] = 2;
+		this->values[2] = 1;
+	}
+	else if (name == 'C') { // Cholesky example
 		this->values[0] = 4;
 		this->values[1] = 12;
 		this->values[2] = -16;
@@ -174,12 +140,7 @@ void Matrix<T>::mat_load(char name)
 		this->values[7] = -43;
 		this->values[8] = 98;
 	}
-	else if (name == 'C') { // Upper Empty
-		for (int i = 0; i < 9; i++) {
-			this->values[i] = 0;
-		}
-	}
-	else if (name == 'D') { // Lower Identity
+	else if (name == 'L') { // Lower Identity
 		for (int i = 0; i < this->num_rows; i++) {
 			for (int j = 0; j < this->num_cols; j++) {
 				if (i == j) {
@@ -191,68 +152,13 @@ void Matrix<T>::mat_load(char name)
 			}
 		}
 	}
-	else if (name == 'E') { // y and x empty
-		for (int i = 0; i < 3; i++) {
-			this->values[i] = 0;
-		}
-	}
-	else if (name == 'F') { // B 
-		this->values[0] = 3;
-		this->values[1] = 2;
-		this->values[2] = 1;
-	}
 }
 
 
-
-//// Do matrix matrix multiplication
-//// output = this * mat_right
-//template <class T>
-//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
-//{
-//
-//   // Check our dimensions match
-//   if (this->num_cols != mat_right.num_rows)
-//   {
-//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//      return;
-//   }
-//
-//   // Check if our output matrix has had space allocated to it
-//   if (output.values != nullptr) 
-//   {
-//      // Check our dimensions match
-//      if (this->rows != output.rows || this->cols != output.cols)
-//      {
-//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//         return;
-//      }      
-//   }
-//   // The output hasn't been preallocated, so we are going to do that
-//   else
-//   {
-//      output.values = new T[this->rows * mat_right.cols];
-//   }
-//
-//   // Set values to zero before hand
-//   for (int i = 0; i < output.size_of_values; i++)
-//   {
-//      output.values[i] = 0;
-//   }
-//
-//   // Now we can do our matrix-matrix multiplication
-//   // CHANGE THIS FOR LOOP ORDERING AROUND
-//   // AND CHECK THE TIME SPENT
-//   // Does the ordering matter for performance. Why??
-//   for(int i = 0; i < this->rows; i++)
-//   {
-//      for(int k = 0; k < this->cols; k++)
-//      {
-//         for(int j = 0; j < mat_right.cols; j++)
-//         {            
-//               output.values[i * output.cols + j] += this->values[i * this->cols + k] * mat_right.values[k * mat_right.cols + j];
-//         }
-//      }
-//   }
-//}
-
+template <class T>
+void Matrix<T>::fill_zeros() {
+	for (int i = 0; i < this->num_rows; i++) {
+		for (int j = 0; j < this->num_cols; j++)
+		this->values[i * this->num_rows + j] = 0;
+	}
+}

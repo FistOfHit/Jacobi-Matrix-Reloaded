@@ -18,6 +18,7 @@ public:
 
 	// Print out the values in our matrix
 	void print();
+	void fill_zeros();
 
 	// Access specific elements
 	T get_value(int row_number, int col_number, bool verbose);
@@ -37,6 +38,5 @@ public:
 private:
 
 	bool self_allocate;
-   
-
+  
 };
