@@ -112,43 +112,6 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 	return required_element;
 }
 
-   // Now we can do our matrix-matrix multiplication
-   // CHANGE THIS FOR LOOP ORDERING AROUND
-   // AND CHECK THE TIME SPENT
-   // Does the ordering matter for performance. Why??
-
-//template <class T>
-//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
-//{
-//
-//   // Check our dimensions match
-//   if (this->num_cols != mat_right.num_rows)
-//   {
-//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//      return;
-//   }
-//
-//   // Check if our output matrix has had space allocated to it
-//   if (output.values != nullptr) 
-//   {
-//      // Check our dimensions match
-//      if (this->rows != output.rows || this->cols != output.cols)
-//      {
-//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//         return;
-//      }      
-//   }
-//   // The output hasn't been preallocated, so we are going to do that
-//   else
-//   {
-//      output.values = new T[this->rows * mat_right.cols];
-//   }
-//
-//   // Set values to zero before hand
-//   for (int i = 0; i < output.size_of_values; i++)
-//   {
-//      output.values[i] = 0;
-//   }
 
 template <class T>
 void Matrix<T>::set_value(int row_number, int col_number, T value) {
@@ -175,45 +138,7 @@ void Matrix<T>::set_value(int row_number, int col_number, T value) {
 
 	this->values[(row_number * this->num_cols) + col_number] = value;
 
-
-   // Now we can do our matrix-matrix multiplication
-   // CHANGE THIS FOR LOOP ORDERING AROUND
-   // AND CHECK THE TIME SPENT
-   // Does the ordering matter for performance. Why??
-
-//template <class T>
-//void Matrix<T>::matMatMult(Matrix& mat_right, Matrix& output)
-//{
-//
-//   // Check our dimensions match
-//   if (this->num_cols != mat_right.num_rows)
-//   {
-//      std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//      return;
-//   }
-//
-//   // Check if our output matrix has had space allocated to it
-//   if (output.values != nullptr) 
-//   {
-//      // Check our dimensions match
-//      if (this->rows != output.rows || this->cols != output.cols)
-//      {
-//         std::cerr << "Input dimensions for matrices don't match" << std::endl;
-//         return;
-//      }      
-//   }
-//   // The output hasn't been preallocated, so we are going to do that
-//   else
-//   {
-//      output.values = new T[this->rows * mat_right.cols];
-//   }
-//
-//   // Set values to zero before hand
-//   for (int i = 0; i < output.size_of_values; i++)
-//   {
-//      output.values[i] = 0;
-//   }
-
+}
 
 
 template <class T>
