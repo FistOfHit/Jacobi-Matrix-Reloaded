@@ -27,6 +27,8 @@ class Matrix {
 		// Load in matrix case
 		void mat_load(char name);
 
+		// Perform some operations with our matrix
+		void matMatMult(Matrix* mat_right, Matrix* output);
 		// Initialise matrix attributes
 		T *values = nullptr;
 		int num_rows = -1;

@@ -14,6 +14,9 @@ class Solver{
 		Matrix<double> *B;			// B matrix
 		Matrix<double> *x;			// X solution matrix
 
+		Matrix<double>* random_pdm(int size);
+		Matrix<double>* random_B(int rows, int cols);
+
 		// To check if the inputs are valid.
 		void check_input_validity();
 		// Transposing any matrix
@@ -29,5 +32,4 @@ class Solver{
 		void cholesky_solve();
 		void gauss_seidel_solve(double omega = 1.0);
 		void jacobi_solve(double omega = 1.0);
-
 };

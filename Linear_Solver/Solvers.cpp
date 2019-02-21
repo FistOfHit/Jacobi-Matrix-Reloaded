@@ -4,7 +4,9 @@
 #include "Matrix.h"
 #include "Matrix.cpp"
 #include <assert.h>
+#include <cstdlib>
 #include <algorithm>
+
 
 
 // Transpose any matrix
@@ -23,9 +25,36 @@ Matrix<double>* Solver::transpose(Matrix<double> *A) {
 	return A_t;
 }
 
+// Generate random positive definite matrix of definited input size
+Matrix<double>* Solver::random_pdm(int size) {
+	auto *rand_mat = new Matrix<double>(size, size, true);
+	for (int i = 0; i <= size; i++) {
+		for (int j = 0; j <= size; j++) {
+			rand_mat->values[j * (size-1) + i] = rand() % 5;
+		} 
+	}
+	auto *rand_mat_trans = new Matrix<double>(size, size, true);
+	rand_mat_trans = transpose(rand_mat);
+	auto *pdm = new Matrix<double>(size, size, true);
+	rand_mat->matMatMult(rand_mat_trans, pdm);
+	return pdm;
+}
+
+// Generate random positive definite matrix of definited input size
+Matrix<double>* Solver::random_B(int rows, int cols) {
+	auto *B = new Matrix<double>(rows, cols, true);
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			B->values[j * (rows)+i] = rand() % 9;
+		}
+	}
+	return B;
+}
+
+
 // Checks if inputs are actually valid fror the defined
 // problem before solver proceeds
-void Solver::check_input_validity() {
+void Solver::check_input_validity(){
 
 	// Method valildty check
 	if (A->num_rows != A->num_cols) {
@@ -53,9 +82,7 @@ void Solver::check_input_validity() {
 			<< "Exiting." << std::endl << std::endl;
 		return;
 	}
-
 	return;
-
 }
 
 
@@ -146,6 +173,7 @@ void Solver::backward_substitution(Matrix<double> *U, Matrix<double> *y) {
 
 void Solver::LUD_solve() {
 
+
 	// Checking to see if problem is valid
 	check_input_validity();
 
@@ -164,11 +192,9 @@ void Solver::LUD_solve() {
 	form_LUD(U, L);
 	// Forward substitution
 	y = forward_substitution(L, y);
+
 	// Backward substitution
 	backward_substitution(U, y);
-	delete U;
-	delete L;
-	delete y;
 }
 
 

@@ -6,10 +6,11 @@
 #include <assert.h>
 #include "tests.h"
 
+
 int main() {
 	int rows = 3;
 	int cols = 3;
-
+	
 	run_tests();
 
 	// Initialising neccessary matrices
@@ -19,6 +20,7 @@ int main() {
 	auto *x = new Matrix<double>(B->num_rows, B->num_cols, true); 
 
 	// Load example case
+
 	A->mat_load('A');   // A is  LUD, A is non-symmetric		
 	C->mat_load('C');   // C is  Chol matrix
 	B->mat_load('B');   // B is [3, 2, 1]										
@@ -36,7 +38,26 @@ int main() {
 	eq_set_2.cholesky_solve();
 	eq_set_2.x->print();
 
-	//// Should swap all these out for smart pointers
+	int size = 8;
+	std::cout << "Random Positive Definite Matrix of size:  " << size << std::endl << "------------------" << std::endl;
+	auto *pdm = new Matrix<double>(size, size, true);
+	pdm = eq_set_1.random_pdm(size);
+	pdm->print();
+
+	auto *B_rand = new Matrix<double>(size, size, true);
+	B_rand = eq_set_1.random_B(1, size);
+	std::cout << "Random RHS side:" << std::endl;
+	B_rand->print();
+	auto *x_new = new Matrix<double>(1, size, true);
+	x_new->fill_zeros();
+	class Solver random_test(pdm, B_rand, x_new);
+	random_test.A->print();
+	random_test.B->print();
+	std::cout << "Solution:" << std::endl;
+	random_test.LUD_solve();
+	random_test.x->print();
+
+	// Should swap all these out for smart pointers
 	delete A;
 	delete C;
 	delete B;
