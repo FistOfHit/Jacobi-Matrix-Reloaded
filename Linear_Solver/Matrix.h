@@ -27,14 +27,6 @@ class Matrix {
 		// Load in matrix case
 		void mat_load(char name);
 
-		/*void operator=(const Matrix<T> &matrix_RHS);
-		Matrix<T> operator*(const Matrix<T> &matrix_RHS);
-		Matrix<T> operator+(const Matrix<T> &matrix_RHS);
-		Matrix<T> operator-(const Matrix<T> &matrix_RHS);*/
-
-		// Perform some operations with our matrix
-		//virtual void matMatMult(Matrix& mat_right, Matrix& output);
-
 		// Initialise matrix attributes
 		T *values = nullptr;
 		int num_rows = -1;

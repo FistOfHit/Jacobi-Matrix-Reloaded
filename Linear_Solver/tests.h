@@ -137,49 +137,8 @@ void iterative_solver_tests() {
 }
 
 
-//void operator_overload_tests() {
-//
-//
-//	// Create a left operand for all operators
-//	Matrix<double> left_operand(3, 3, true);
-//	left_operand.set_value(0, 0, 1);
-//	left_operand.set_value(0, 1, 1);
-//	left_operand.set_value(0, 2, 1);
-//	left_operand.set_value(1, 0, 1);
-//	left_operand.set_value(1, 1, 1);
-//	left_operand.set_value(1, 2, 1);
-//	left_operand.set_value(2, 0, 1);
-//	left_operand.set_value(2, 1, 1);
-//	left_operand.set_value(2, 2, 1);
-//
-//
-//	// Create a right operand for all operators
-//	Matrix<double> right_operand(3, 3, true);
-//	right_operand.set_value(0, 0, 1);
-//	right_operand.set_value(0, 1, 1);
-//	right_operand.set_value(0, 2, 1);
-//	right_operand.set_value(1, 0, 1);
-//	right_operand.set_value(1, 1, 1);
-//	right_operand.set_value(1, 2, 1);
-//	right_operand.set_value(2, 0, 1);
-//	right_operand.set_value(2, 1, 1);
-//	right_operand.set_value(2, 2, 1);
-//
-//
-//	Matrix<double> sum_matrix = left_operand + right_operand;
-//	sum_matrix.print();
-//
-//
-//	Matrix<double> sub_matrix = left_operand - right_operand;
-//	sub_matrix.print();
-//
-//
-//}
-
-
 void run_tests() {
 	creation_tests();
 	iterative_solver_tests();
-	//operator_overload_tests();
 }
 
