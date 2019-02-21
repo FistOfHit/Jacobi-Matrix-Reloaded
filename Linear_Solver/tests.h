@@ -122,7 +122,7 @@ void iterative_solver_tests() {
 	Matrix<double> test_sor_sol(4, 1, true);
 	test_solver.x = &test_sor_sol;
 	// If the omega parameter is set higher instablility occurs
-	test_solver.gauss_seidel_solve(100, 1.5);
+	test_solver.gauss_seidel_solve(1.5);
 	// See if it matches reality
 
 	std::cout << "Expected print out: " << std::endl
