@@ -8,6 +8,9 @@
 
 
 // Transpose any matrix
+Solver::Solver(Matrix<double> *A, Matrix<double> *B, Matrix<double> *x) : A(A), B(B), x(x) {};
+
+
 Matrix<double>* Solver::transpose(Matrix<double> *A) {
 	auto *A_t = new Matrix<double>(A->num_rows, A->num_cols, true);
 
@@ -192,6 +195,7 @@ void Solver::cholesky_solve() {
 	// Backward substitution
 	backward_substitution(L_t, y);
 	delete L_t;
+	delete y;
 }
 
 
@@ -237,9 +241,24 @@ void Solver::gauss_seidel_solve(double omega) {
 
 void Solver::jacobi_solve(double omega) {
 
+
 	// Checking to see if problem is valid
 	check_input_validity();
-	
+	if (A->num_cols != x->num_rows) {
+		std::cout << "Left hand side matrix with " << A->num_cols << " columns"
+			<< " not compatible with solution with " << x->num_rows
+			<< " elements." << std::endl
+			<< "Exiting." << std::endl << std::endl;
+		return;
+	}
+	// Solution-RHS compatibility check
+	if (x->num_rows != B->num_rows) {
+		std::cout << "Solution with " << x->num_rows << " elements"
+			<< " not compatible with right hand side with " << B->num_rows
+			<< " elements." << std::endl
+			<< "Exiting." << std::endl << std::endl;
+		return;
+	}
 	// Create array to store old solution for jacobi
 	double *old_solution = new double[x->num_rows];
 	double sum;

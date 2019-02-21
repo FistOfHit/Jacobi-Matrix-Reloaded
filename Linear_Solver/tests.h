@@ -81,10 +81,7 @@ void iterative_solver_tests() {
 	// See if jacobi with omega = 1 converges
 	Matrix<double> test_jac_sol(4, 1, true);
 
-	class Solver test_solver;
-	test_solver.A = &test_LHS;
-	test_solver.B = &test_RHS;
-	test_solver.x = &test_jac_sol;
+	class Solver test_solver(&test_LHS, &test_RHS, &test_jac_sol);
 	test_solver.jacobi_solve();
 	
 	// See if it matches reality

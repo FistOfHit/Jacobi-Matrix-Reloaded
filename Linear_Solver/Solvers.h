@@ -7,6 +7,7 @@
 class Solver{	
 
 	public:
+		Solver(Matrix<double> *A, Matrix<double> *B, Matrix<double> *x);
 
 		// Problem defintiion
 		Matrix<double> *A;			// A matrix
