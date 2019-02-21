@@ -1,24 +1,28 @@
 #include <iostream>
 #include <math.h>
-#include <time.h>s
+#include <time.h>
 #include "Matrix.cpp"
 #include "jacobi.h"
+#include "gauss_siedel_sor.h"
 #include <assert.h>
 
 
 void creation_tests() {
+
+
 	// Lets test if we can create a matrix and then
 	// allocate values to it that were allocated before.
 	std::cout << "----------Test: Create pre-allocated matrix----------" << std::endl;
+
 
 	// Manually allocating array
 	int prealloc_test_array[25];
 	for (int i = 0; i < 25; i++) { prealloc_test_array[i] = i + 1; }
 
+
 	// Creating a matrix
 	Matrix<int>test_matrix1(5, 5, prealloc_test_array);
-
-	std::cout << "Expected print out: " << std::endl << std::endl
+	std::cout << "Expected print out: " << std::endl
 		<< "Matrix 5 X 5" << std::endl
 		<< "Data type: int" << std::endl
 		<< "1 2 3 4 5" << std::endl
@@ -26,19 +30,17 @@ void creation_tests() {
 		<< "11 12 13 14 15" << std::endl
 		<< "16 17 18 19 20" << std::endl
 		<< "21 22 23 24 25" << std::endl;
-
+	std::cout << "Actual print out: " << std::endl;
 	test_matrix1.print();
 
-
-	test_matrix.print();
 
 	// Lets test if we can create an empty matrix
 	// (full of zeros) and print it out
 	std::cout << "----------Test: Create empty zeros matrix----------" << std::endl;
 
+
 	// Creating a matrix
 	Matrix<int>test_matrix2(5, 5, true);
-
 	cout << "Expected print out: " << endl << endl
 		 << "Matrix 5 X 5" << endl
 		 << "Data type: int" << endl
@@ -47,27 +49,100 @@ void creation_tests() {
 		 << "0 0 0 0 0" << endl
 		 << "0 0 0 0 0" << endl
 		 << "0 0 0 0 0" << endl;
-
+	std::cout << "Actual print out: " << std::endl;
 	test_matrix2.print();
 
-	Matrix<int>test_matrix_2(5, 5, true);
 
-	std::cout << "Expected print out: " << std::endl << std::endl
-		<< "Matrix 5 X 5" << std::endl
-		<< "Data type: int" << std::endl
-		<< "0 0 0 0 0" << std::endl
-		<< "0 0 0 0 0" << std::endl
-		<< "0 0 0 0 0" << std::endl
-		<< "0 0 0 0 0" << std::endl
-		<< "0 0 0 0 0" << std::endl;
+}
 
-	test_matrix_2.print();
+void iterative_solver_tests() {
+
+
+	// Create a LHS A
+	Matrix<double> test_LHS(4, 4, true);
+	test_LHS.set_value(0, 0, 10);
+	test_LHS.set_value(0, 1, -1);
+	test_LHS.set_value(0, 2, 2);
+	test_LHS.set_value(0, 3, 0);
+	test_LHS.set_value(1, 0, -1);
+	test_LHS.set_value(1, 1, 11);
+	test_LHS.set_value(1, 2, -1);
+	test_LHS.set_value(1, 3, 3);
+	test_LHS.set_value(2, 0, 2);
+	test_LHS.set_value(2, 1, -1);
+	test_LHS.set_value(2, 2, 10);
+	test_LHS.set_value(2, 3, -1);
+	test_LHS.set_value(3, 0, 0);
+	test_LHS.set_value(3, 1, 3);
+	test_LHS.set_value(3, 2, -1);
+	test_LHS.set_value(3, 3, 8);
+
+
+	// Create a RHS b
+	Matrix<double> test_RHS(4, 1, true);
+	test_RHS.set_value(0, 0, 6);
+	test_RHS.set_value(1, 0, 25);
+	test_RHS.set_value(2, 0, -11);
+	test_RHS.set_value(3, 0, 15);
+
+
+	std::cout << "----------Test: Jacobi iterative solver----------" << std::endl;
+	// Start with initial condition 0 vector,
+	// See if jacobi with omega = 1 converges
+	Matrix<double> test_jacobi(4, 1, true);
+	jacobi(test_LHS, test_jacobi, test_RHS, 100);
+	// See if it matches reality
+	cout << "Expected print out: " << endl
+		 << "Matrix 4 X 1" << endl
+		 << "Data type: double" << endl
+		 << 1 << endl
+		 << 2 << endl
+		 << -1 << endl
+		 << 1 << endl;
+	std::cout << "Actual print out: " << std::endl;
+	test_jacobi.print();
+
+
+	std::cout << "----------Test: Gauss-seidel iterative solver----------" << std::endl;
+	// Start with initial condition 0 vector,
+	// See if gauss-seidel with omega = 1 converges
+	Matrix<double> test_gs(4, 1, true);
+	gauss_seidel(test_LHS, test_gs, test_RHS, 100);
+	// See if it matches reality
+	cout << "Expected print out: " << endl
+		 << "Matrix 4 X 1" << endl
+		 << "Data type: double" << endl
+		 << 1 << endl
+		 << 2 << endl
+		 << -1 << endl
+		 << 1 << endl;
+	std::cout << "Actual print out: " << std::endl;
+	test_gs.print();
+
+
+	std::cout << "----------Test: Successive over-relaxation (SOR) iterative solver----------" << std::endl;
+	// Start with initial condition 0 vector,
+	// See if gauss-seidel with omega = 1.5 converges (SOR)
+	Matrix<double> test_sor(4, 1, true);
+	gauss_seidel(test_LHS, test_sor, test_RHS, 100, 1.5);
+	// See if it matches reality
+	cout << "Expected print out: " << endl
+		 << "Matrix 4 X 1" << endl
+		 << "Data type: double" << endl
+		 << 1 << endl
+		 << 2 << endl
+		 << -1 << endl
+		 << 1 << endl;
+	std::cout << "Actual print out: " << std::endl;
+	test_sor.print();
+
 
 }
 
 
 void run_tests() {
 	creation_tests();
+	iterative_solver_tests();
 }
 
 
@@ -113,140 +188,44 @@ void form_LUD(Matrix<double> *A, Matrix<double> *U, Matrix<double> *L) {
 	}
 }
 
-	/*int rows = 3;
-	int cols = 3;
-	auto *A = new Matrix<double>(rows, cols, true);
-	auto *L = new Matrix<double>(rows, cols, true);
-
-// Performs forwards substitution by reference
-Matrix<double>* forward_substitution(Matrix<double> *L, Matrix<double> *B, Matrix<double> *y){
-	assert(L->num_rows == L->num_cols);
-	for (int i = 0; i < L-> num_rows; i++) {
-		if (i == 0) {
-			y->values[i] = B->values[i] / L->values[i  * L->num_rows + i];
-		}
-		else if (i != 0) {
-			double s = 0;
-			for (int j = 0; j < i; j++) {
-				s += L->values[i * L->num_rows + j] * y->values[j];
-			}
-			y->values[i] = (1 / L->values[i * L->num_rows + i]) * (B->values[i] - s);
-		}
-	}
-	return y;
-}
-
-
-// Performs backwards substutition by reference
-Matrix<double>* backwards_substitution(Matrix<double> *U, Matrix<double> *y, Matrix<double> *x) {
-	assert(U->num_rows == U->num_cols);
-	for (int i = U->num_rows; i > -1; i--) {
-		if (i == U->num_rows - 1) {
-			x->values[U->num_rows - 1] = y->values[U->num_rows - 1] / U->values[i *  U->num_rows + i];
-		}
-		else if (i != U->num_rows) {
-			double s = 0;
-			for (int j = 0; j < U->num_cols; j++) {
-				s += U->values[i* U->num_rows + j] * x->values[j];
-			}
-			x->values[i] = (1 / U->values[i* U->num_rows + i]) * (y->values[i] - s);
-		}
-	}
-	return x;
-}
 
 int main() {
-	int rows = 3;
-	int cols = 3;
 
-	delete A;
-	delete L;*/
+	//int rows = 3;
+	//int cols = 3;
 
-	//run_tests(); // If you want to run the tests
+	//// Performs Lower Upper decomposition using the Doolitle algorithm
+	//// Initialising neccessary matrices
+	//auto *A = new Matrix<double>(rows, cols, true);
+	//auto *C = new Matrix<double>(rows, cols, true);
+	//auto *L = new Matrix<double>(rows, cols, true);
+	//auto *U = new Matrix<double>(rows, cols, true);
+	//auto *y = new Matrix<double>(1, 3, true);
+	//auto *B = new Matrix<double>(1, 3, true);
+	//auto *x = new Matrix<double>(1, 3, true);
 
-	// Performs Lower Upper decomposition using the Doolitle algorithm
-	// Initialising neccessary matrices
-	auto *A = new Matrix<double>(rows, cols, true);
-	auto *C = new Matrix<double>(rows, cols, true);
-	auto *L = new Matrix<double>(rows, cols, true);
-	auto *U = new Matrix<double>(rows, cols, true);
-	auto *y = new Matrix<double>(1, 3, true);
-	auto *B = new Matrix<double>(1, 3, true);
-	auto *x = new Matrix<double>(1, 3, true);
+	//// Load example case
+	//A->mat_load('A'); // A is  LUD, A is non-symmetric
+	//C->mat_load('B'); // C is  LUD, B is lower Cholesky decomposiiton
+	//U->mat_load('C'); // U is  LUD, B is Upper triangular Empty
+	//L->mat_load('D'); // L is  LUD, D is Lower triangular identity
+	//B->mat_load('F'); // B is [3, 2, 1]
+	//y->mat_load('E'); // y is empty (1, 3)
+	//x->mat_load('E'); // x is empty (1, 3)
+	//
+	////L = form_cholesky(C, L);   /////////////// Need to write transpose to implement this
 
-	// Load example case
-	A->mat_load('A'); // A is  LUD, A is non-symmetric
-	C->mat_load('B'); // C is  LUD, B is lower Cholesky decomposiiton
-	U->mat_load('C'); // U is  LUD, B is Upper triangular Empty
-	L->mat_load('D'); // L is  LUD, D is Lower triangular identity
-	B->mat_load('F'); // B is [3, 2, 1]
-	y->mat_load('E'); // y is empty (1, 3)
-	x->mat_load('E'); // x is empty (1, 3)
-	
-	//L = form_cholesky(C, L);   /////////////// Need to write transpose to implement this
+	//// Decompose into upper and lower triagular matrices
+	//form_LUD(A, U, L); 
+	//// Forward substitution
+	//y = forward_substitution(L, B, y);
+	//// Backward substitution
+	//x = backwards_substitution(U, y, x);
+	//// Show solution
+	//x->print();
 
-	// Decompose into upper and lower triagular matrices
-	form_LUD(A, U, L); 
-	// Forward substitution
-	y = forward_substitution(L, B, y);
-	// Backward substitution
-	x = backwards_substitution(U, y, x);
-	// Show solution
-	x->print();
-
-	/*Matrix<double> test_LHS(4, 4, true);
-	test_LHS.set_value(0, 0, 10); 
-	test_LHS.set_value(0, 1, -1);
-	test_LHS.set_value(0, 2, 2);
-	test_LHS.set_value(0, 3, 0);
-	test_LHS.set_value(1, 0, -1);
-	test_LHS.set_value(1, 1, 11);
-	test_LHS.set_value(1, 2, -1);
-	test_LHS.set_value(1, 3, 3);
-	test_LHS.set_value(2, 0, 2);
-	test_LHS.set_value(2, 1, -1);
-	test_LHS.set_value(2, 2, 10);
-	test_LHS.set_value(2, 3, -1);
-	test_LHS.set_value(3, 0, 0);
-	test_LHS.set_value(3, 1, 3);
-	test_LHS.set_value(3, 2, -1);
-	test_LHS.set_value(3, 3, 8);
-
-
-	test_LHS.print();
-
-	Matrix<double> test_RHS(4, 1, true);
-	test_RHS.set_value(0, 0, 6);
-	test_RHS.set_value(1, 0, 25);
-	test_RHS.set_value(2, 0, -11);
-	test_RHS.set_value(3, 0, 15);
-
-	test_RHS.print();
-
-	Matrix<double> test_solution(4, 1, true);
-	jacobi(test_LHS, test_solution, test_RHS, 5);
-
-	test_solution.print();*/
-
-	Matrix<double> test_LHS(2, 2, true);
-	test_LHS.set_value(0, 0, 2);
-	test_LHS.set_value(0, 1, 1);
-	test_LHS.set_value(1, 0, 5);
-	test_LHS.set_value(1, 1, 7);
-
-	test_LHS.print();
-
-	Matrix<double> test_RHS(2, 1, true);
-	test_RHS.set_value(0, 0, 11);
-	test_RHS.set_value(1, 0, 13);
-
-	test_RHS.print();
-
-	Matrix<double> test_solution(2, 1, true);
-
-	jacobi(test_LHS, test_solution, test_RHS, 100);
-
-	test_solution.print();
+	// If you want to run the tests
+	run_tests();
 
 	system("pause");
 }
