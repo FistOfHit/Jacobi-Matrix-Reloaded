@@ -37,7 +37,7 @@ void Solver::check_input_validity() {
 		return;
 	}
 	// LHS-solution compatibility check
-	if (A->num_cols != x->num_rows) {
+	if ((A->num_cols == x->num_rows) == (A->num_cols == x->num_cols)) {
 
 		std::cout << "Left hand side matrix with " << A->num_cols << " collumns"
 			<< " not compatible with solution with " << x->num_rows
@@ -46,13 +46,15 @@ void Solver::check_input_validity() {
 		return;
 	}
 	// Solution-RHS compatibility check
-	if (x->num_rows != B->num_rows) {
+	if ((x->num_rows != B->num_rows) == (x->num_rows != B->num_cols)) {
 		std::cout << "Solution with " << x->num_rows << " elements"
 			<< " not compatible with right hand side with " << B->num_rows
 			<< " elements." << std::endl
 			<< "Exiting." << std::endl << std::endl;
 		return;
 	}
+
+	return;
 
 }
 
@@ -209,7 +211,7 @@ void Solver::gauss_seidel_solve(double omega) {
 	double new_value;
 	int row_index;
 
-	double tolerance = 0.0001;
+	double tolerance = 0.000001;
 	while (max_change > tolerance) {
 		max_change = 0;
 		// Iterate through each element
@@ -244,21 +246,7 @@ void Solver::jacobi_solve(double omega) {
 
 	// Checking to see if problem is valid
 	check_input_validity();
-	if (A->num_cols != x->num_rows) {
-		std::cout << "Left hand side matrix with " << A->num_cols << " columns"
-			<< " not compatible with solution with " << x->num_rows
-			<< " elements." << std::endl
-			<< "Exiting." << std::endl << std::endl;
-		return;
-	}
-	// Solution-RHS compatibility check
-	if (x->num_rows != B->num_rows) {
-		std::cout << "Solution with " << x->num_rows << " elements"
-			<< " not compatible with right hand side with " << B->num_rows
-			<< " elements." << std::endl
-			<< "Exiting." << std::endl << std::endl;
-		return;
-	}
+
 	// Create array to store old solution for jacobi
 	double *old_solution = new double[x->num_rows];
 	double sum;
@@ -269,7 +257,7 @@ void Solver::jacobi_solve(double omega) {
 		old_solution[k] = x->values[k];
 	}
 
-	double tolerance = 0.0001;
+	double tolerance = 0.000001;
 	while (max_change > tolerance) {
 
 		max_change = 0;
