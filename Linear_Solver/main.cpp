@@ -29,18 +29,6 @@ int main() {
 	eq_set_1.LUD_solve();
 	eq_set_1.x->print();
 
-	std::cout << "Jacobi Solver" << std::endl << "------------------" << std::endl;
-	x->fill_zeros();				// Jacobi case
-	eq_set_1.x = x;
-	eq_set_1.jacobi_solve();
-	eq_set_1.x->print();
-
-	std::cout << "Gauss Seidel Solve" << std::endl << "------------------" << std::endl;
-	x->fill_zeros();				// Gauss Seidel case
-	eq_set_1.x = x;
-	eq_set_1.gauss_seidel_solve();
-	eq_set_1.x->print();
-
 	// Only works for symmetric matrices
 	std::cout << "Cholesky Decomposition" << std::endl << "------------------" << std::endl;
 	x->fill_zeros(); 
