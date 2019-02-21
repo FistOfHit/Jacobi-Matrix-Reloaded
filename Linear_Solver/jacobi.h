@@ -4,7 +4,7 @@
 
 
 void jacobi(Matrix<double> &LHS, Matrix<double> &solution,
-            Matrix<double> &RHS, int num_iterations, double omega = 1) {
+            Matrix<double> &RHS, int num_iterations, double omega = (2.0/3.0)) {
 
 
 	// Method valildty check
