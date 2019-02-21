@@ -7,7 +7,7 @@ using namespace std;
 
 
 void jacobi(Matrix<double> &LHS, Matrix<double> &solution,
-            Matrix<double> &RHS, int num_iterations) {
+            Matrix<double> &RHS, int num_iterations, double omega = 1) {
 
 
 	// Method valildty check
@@ -52,28 +52,33 @@ void jacobi(Matrix<double> &LHS, Matrix<double> &solution,
 
 
 	double sum;
-	int row_number;
+	int row_index;
 	for (int n = 0; n < num_iterations; n++) {
 
 
-		for (int i = 0; i < solution.num_rows; i++) {
-			old_solution[i] = solution.values[i];
+		for (int k = 0; k < solution.num_rows; k++) {
+			old_solution[k] = solution.values[k];
 		}
 
 
 		// Iterate through each element
 		for (int i = 0; i < LHS.num_rows; i++) {
 		
+
 			sum = 0;
-			row_number = i * LHS.num_cols;
+			row_index = i * LHS.num_cols;
 
 			// Use old information fist, dont overwrite
-			for (int j = 0; j < LHS.num_cols; j++) {
-				sum += (LHS.values[row_number + j] * old_solution[j]);
+			for (int j = 0; j < i; j++) {
+				sum += (LHS.values[row_index + j] * old_solution[j]);
+			}
+			for (int j = i+1; j < LHS.num_cols; j++) {
+				sum += (LHS.values[row_index + j] * old_solution[j]);
 			}
 
-			// jacobi iteration
-			solution.values[i] = (RHS.values[i] - sum) / LHS.values[row_number + i];
+			// Weighted jacobi iteration
+			solution.values[i] = ((1 - omega) * solution.values[i]) +
+								 (omega * (RHS.values[i] - sum) / LHS.values[row_index + i]);
 
 		}
 
