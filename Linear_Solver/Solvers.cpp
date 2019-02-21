@@ -5,6 +5,9 @@
 #include <assert.h>
 
 
+Solver::Solver(Matrix<double> *A, Matrix<double> *B, Matrix<double> *x) : A(A), B(B), x(x) {};
+
+
 Matrix<double>* Solver::transpose(Matrix<double> *A) {
 	auto *A_t = new Matrix<double>(A->num_rows, A->num_cols, true);
 	A_t->fill_zeros(); // A_t is Upper triangular Empty
@@ -138,6 +141,7 @@ void Solver::cholesky_solve() {
 	// Backward substitution
 	backward_substitution(L_t, y);
 	delete L_t;
+	delete y;
 }
 
 
@@ -179,7 +183,7 @@ void Solver::jacobi_solve(int num_iterations, double omega) {
 	// LHS-solution compatibility check
 	if (A->num_cols != x->num_rows) {
 
-		std::cout << "Left hand side matrix with " << A->num_cols << " collumns"
+		std::cout << "Left hand side matrix with " << A->num_cols << " columns"
 			<< " not compatible with solution with " << x->num_rows
 			<< " elements." << std::endl
 			<< "Exiting." << std::endl << std::endl;
