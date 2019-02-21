@@ -3,7 +3,7 @@
 #include "Matrix.h"
 #include "Matrix.cpp"
 #include <assert.h>
-
+#include <cstdlib>
 
 Solver::Solver(Matrix<double> *A, Matrix<double> *B, Matrix<double> *x) : A(A), B(B), x(x) {};
 
@@ -17,6 +17,32 @@ Matrix<double>* Solver::transpose(Matrix<double> *A) {
 		}
 	}
 	return A_t;
+}
+
+// Generate random positive definite matrix of definited input size
+Matrix<double>* Solver::random_pdm(int size) {
+	auto *rand_mat = new Matrix<double>(size, size, true);
+	for (int i = 0; i <= size; i++) {
+		for (int j = 0; j <= size; j++) {
+			rand_mat->values[j * (size-1) + i] = rand() % 5;
+		} 
+	}
+	auto *rand_mat_trans = new Matrix<double>(size, size, true);
+	rand_mat_trans = transpose(rand_mat);
+	auto *pdm = new Matrix<double>(size, size, true);
+	rand_mat->matMatMult(rand_mat_trans, pdm);
+	return pdm;
+}
+
+// Generate random positive definite matrix of definited input size
+Matrix<double>* Solver::random_B(int rows, int cols) {
+	auto *B = new Matrix<double>(rows, cols, true);
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			B->values[j * (rows) + i] = rand() % 9;
+		}
+	}
+	return B;
 }
 
 
@@ -97,6 +123,7 @@ void Solver::backward_substitution(Matrix<double> *U, Matrix<double> *y) {
 
 
 void Solver::LUD_solve() {
+
 	// U and L the same shape as A
 	auto *U = new Matrix<double>(A->num_rows, A->num_cols, true);
 	auto *L = new Matrix<double>(A->num_rows, A->num_cols, true);
@@ -112,11 +139,9 @@ void Solver::LUD_solve() {
 	form_LUD(U, L);
 	// Forward substitution
 	y = forward_substitution(L, y);
+
 	// Backward substitution
 	backward_substitution(U, y);
-	delete U;
-	delete L;
-	delete y;
 }
 
 

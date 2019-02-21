@@ -13,6 +13,9 @@ class Solver{
 		Matrix<double> *B;			// B matrix
 		Matrix<double> *x;			// X solution matrix
 
+		Matrix<double>* random_pdm(int size);
+		Matrix<double>* random_B(int rows, int cols);
+
 		Matrix<double>* transpose(Matrix<double> *A);
 		void form_LUD(Matrix<double> *U, Matrix<double> *L);
 		void form_cholesky(Matrix<double> *L);

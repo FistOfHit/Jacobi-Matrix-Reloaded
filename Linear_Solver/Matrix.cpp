@@ -168,6 +168,50 @@ void Matrix<T>::fill_zeros() {
 }
 
 
+template <class T>
+void Matrix<T>::matMatMult(Matrix* mat_right, Matrix* output){	
+	// Check our dimensions match
+	if (this->num_cols != mat_right->num_rows)
+	{
+		std::cerr << "Input dimensions for matrices don't match" << std::endl;
+		return;
+	}
+
+	// Check if our output matrix has had space allocated to it
+	if (output->values != nullptr)
+	{
+		// Check our dimensions match
+		if (this->num_rows != output->num_rows || this->num_cols != output->num_cols)
+		{
+			std::cerr << "Input dimensions for matrices don't match" << std::endl;
+			return;
+		}
+	}
+	// The output hasn't been preallocated, so we are going to do that
+	else
+	{
+		output->values = new T[this-> num_rows * mat_right->num_cols];
+	}
+
+	// Set values to zero before hand
+	for (int i = 0; i < output->num_values; i++)
+	{
+		output->values[i] = 0;
+	}
+
+	for (int i = 0; i < this->num_rows; i++)
+	{
+		for (int k = 0; k < this->num_cols; k++)
+		{
+			for (int j = 0; j < mat_right->num_cols; j++)
+			{
+				output->values[i * output->num_cols + j] += this->values[i * this->num_cols + k] * mat_right->values[k * mat_right->num_cols + j];
+			}
+		}
+	}
+}
+
+
 //template <class T>
 //void Matrix<T>::operator=(const Matrix<T> &matrix_RHS) {
 //

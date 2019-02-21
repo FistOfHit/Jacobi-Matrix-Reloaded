@@ -33,7 +33,7 @@ class Matrix {
 		Matrix<T> operator-(const Matrix<T> &matrix_RHS);*/
 
 		// Perform some operations with our matrix
-		//virtual void matMatMult(Matrix& mat_right, Matrix& output);
+		void matMatMult(Matrix* mat_right, Matrix* output);
 
 		// Initialise matrix attributes
 		T *values = nullptr;
