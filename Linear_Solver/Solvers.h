@@ -19,5 +19,7 @@ class Solver{
 		void backward_substitution(Matrix<double> *U, Matrix<double> *y);
 		void LUD_solve();
 		void cholesky_solve();
+		void gauss_seidel_solve(int num_iterations = 100, double omega = 1);
+		void jacobi_solve(int num_iterations = 100, double omega = (2.0 / 3.0));
 };
 #endif

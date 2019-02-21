@@ -1,16 +1,10 @@
 #pragma once
 #include <iostream>
 #include "Matrix.cpp"
-#include "jacobi.h"
-#include "gauss_siedel_sor.h"
-
-
-using namespace std;
+#include "Solvers.h"
 
 
 void creation_tests() {
-
-
 	// Lets test if we can create a matrix and then
 	// allocate values to it that were allocated before.
 	std::cout << "----------Test: Create pre-allocated matrix----------" << std::endl;
@@ -42,22 +36,19 @@ void creation_tests() {
 
 	// Creating a matrix
 	Matrix<int>test_matrix2(5, 5, true);
-	cout << "Expected print out: " << endl << endl
-		<< "Matrix 5 X 5" << endl
-		<< "Data type: int" << endl
-		<< "0 0 0 0 0" << endl
-		<< "0 0 0 0 0" << endl
-		<< "0 0 0 0 0" << endl
-		<< "0 0 0 0 0" << endl
-		<< "0 0 0 0 0" << endl;
+	std::cout << "Expected print out: " << std::endl << std::endl
+		<< "Matrix 5 X 5" << std::endl
+		<< "Data type: int" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl
+		<< "0 0 0 0 0" << std::endl;
 	std::cout << "Actual print out: " << std::endl;
 	test_matrix2.print();
-
-
 }
 
 void iterative_solver_tests() {
-
 
 	// Create a LHS A
 	Matrix<double> test_LHS(4, 4, true);
@@ -78,7 +69,6 @@ void iterative_solver_tests() {
 	test_LHS.set_value(3, 2, -1);
 	test_LHS.set_value(3, 3, 8);
 
-
 	// Create a RHS b
 	Matrix<double> test_RHS(4, 1, true);
 	test_RHS.set_value(0, 0, 6);
@@ -86,58 +76,67 @@ void iterative_solver_tests() {
 	test_RHS.set_value(2, 0, -11);
 	test_RHS.set_value(3, 0, 15);
 
-
 	std::cout << "----------Test: Jacobi iterative solver----------" << std::endl;
 	// Start with initial condition 0 vector,
 	// See if jacobi with omega = 1 converges
-	Matrix<double> test_jacobi(4, 1, true);
-	jacobi(test_LHS, test_jacobi, test_RHS, 100);
+	Matrix<double> test_jac_sol(4, 1, true);
+
+	class Solver test_solver;
+	test_solver.A = &test_LHS;
+	test_solver.B = &test_RHS;
+	test_solver.x = &test_jac_sol;
+	test_solver.jacobi_solve();
+	
 	// See if it matches reality
-	cout << "Expected print out: " << endl
-		<< "Matrix 4 X 1" << endl
-		<< "Data type: double" << endl
-		<< 1 << endl
-		<< 2 << endl
-		<< -1 << endl
-		<< 1 << endl;
+	std::cout << "Expected print out: " << std::endl
+		<< "Matrix 4 X 1" << std::endl
+		<< "Data type: double" << std::endl
+		<< 1 << std::endl
+		<< 2 << std::endl
+		<< -1 << std::endl
+		<< 1 << std::endl;
 	std::cout << "Actual print out: " << std::endl;
-	test_jacobi.print();
+	test_solver.x->print();
 
 
 	std::cout << "----------Test: Gauss-seidel iterative solver----------" << std::endl;
 	// Start with initial condition 0 vector,
 	// See if gauss-seidel with omega = 1 converges
-	Matrix<double> test_gs(4, 1, true);
-	gauss_seidel(test_LHS, test_gs, test_RHS, 100);
+	Matrix<double> test_gs_sol(4, 1, true);
+
+	test_solver.x = &test_gs_sol;
+	test_solver.gauss_seidel_solve();
+
 	// See if it matches reality
-	cout << "Expected print out: " << endl
-		<< "Matrix 4 X 1" << endl
-		<< "Data type: double" << endl
-		<< 1 << endl
-		<< 2 << endl
-		<< -1 << endl
-		<< 1 << endl;
+	std::cout << "Expected print out: " << std::endl
+		<< "Matrix 4 X 1" << std::endl
+		<< "Data type: double" << std::endl
+		<< 1 << std::endl
+		<< 2 << std::endl
+		<< -1 << std::endl
+		<< 1 << std::endl;
 	std::cout << "Actual print out: " << std::endl;
-	test_gs.print();
+	test_solver.x->print();
 
 
 	std::cout << "----------Test: Successive over-relaxation (SOR) iterative solver----------" << std::endl;
 	// Start with initial condition 0 vector,
 	// See if gauss-seidel with omega = 1.5 converges (SOR)
-	Matrix<double> test_sor(4, 1, true);
-	gauss_seidel(test_LHS, test_sor, test_RHS, 100, 1.5);
+	Matrix<double> test_sor_sol(4, 1, true);
+	test_solver.x = &test_sor_sol;
+	// If the omega parameter is set higher instablility occurs
+	test_solver.gauss_seidel_solve(100, 1.5);
 	// See if it matches reality
-	cout << "Expected print out: " << endl
-		<< "Matrix 4 X 1" << endl
-		<< "Data type: double" << endl
-		<< 1 << endl
-		<< 2 << endl
-		<< -1 << endl
-		<< 1 << endl;
+
+	std::cout << "Expected print out: " << std::endl
+		<< "Matrix 4 X 1" << std::endl
+		<< "Data type: double" << std::endl
+		<< 1 << std::endl
+		<< 2 << std::endl
+		<< -1 << std::endl
+		<< 1 << std::endl;
 	std::cout << "Actual print out: " << std::endl;
-	test_sor.print();
-
-
+	test_solver.x->print();
 }
 
 

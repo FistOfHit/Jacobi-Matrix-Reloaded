@@ -109,7 +109,6 @@ void Solver::LUD_solve() {
 	form_LUD(U, L);
 	// Forward substitution
 	y = forward_substitution(L, y);
-	std::cout << "reached here";
 	// Backward substitution
 	backward_substitution(U, y);
 	delete U;
@@ -139,4 +138,85 @@ void Solver::cholesky_solve() {
 	// Backward substitution
 	backward_substitution(L_t, y);
 	delete L_t;
+}
+
+
+void Solver::gauss_seidel_solve(int num_iterations, double omega) {
+	double sum;
+	int row_index;
+	for (int n = 0; n < num_iterations; n++) {
+		// Iterate through each element
+		for (int i = 0; i < A->num_rows; i++) {
+
+			sum = 0;
+			row_index = i * A->num_cols;
+
+			// Use new information as it becomes available
+			for (int j = 0; j < i; j++) {
+				sum += (A->values[row_index + j] * x->values[j]);
+			}
+			for (int j = i + 1; j < A->num_cols; j++) {
+				sum += (A->values[row_index + j] * x->values[j]);
+			}
+			// Successive over relaxation
+			x->values[i] = ((1 - omega) * x->values[i]) +
+				(omega * (B->values[i] - sum) / A->values[row_index + i]);
+		}
+	}
+}
+
+
+void Solver::jacobi_solve(int num_iterations, double omega) {
+	// Method valildty check
+	if (A->num_rows != A->num_cols) {
+
+		std::cout << "This method does not support rectangular matricies" << std::endl
+			<< "Please consider either padding this array (array.pad(num_rows, num_cols))" << std::endl
+			<< "or consider using QR factorisation" << std::endl
+			<< "Exiting." << std::endl << std::endl;
+		return;
+	}
+	// LHS-solution compatibility check
+	if (A->num_cols != x->num_rows) {
+
+		std::cout << "Left hand side matrix with " << A->num_cols << " collumns"
+			<< " not compatible with solution with " << x->num_rows
+			<< " elements." << std::endl
+			<< "Exiting." << std::endl << std::endl;
+		return;
+	}
+	// Solution-RHS compatibility check
+	if (x->num_rows != B->num_rows) {
+		std::cout << "Solution with " << x->num_rows << " elements"
+			<< " not compatible with right hand side with " << B->num_rows
+			<< " elements." << std::endl
+			<< "Exiting." << std::endl << std::endl;
+		return;
+	}
+	// Create array to store old solution for jacobi
+	double *old_solution = new double[x->num_rows];
+	double sum;
+	int row_index;
+
+	for (int n = 0; n < num_iterations; n++) {
+		for (int k = 0; k < x->num_rows; k++) {
+			old_solution[k] = x->values[k];
+		}
+		// Iterate through each element
+		for (int i = 0; i < A->num_rows; i++) {
+			sum = 0;
+			row_index = i * A->num_cols;
+			// Use old information fist, dont overwrite
+			for (int j = 0; j < i; j++) {
+				sum += (A->values[row_index + j] * old_solution[j]);
+			}
+			for (int j = i + 1; j < A->num_cols; j++) {
+				sum += (A->values[row_index + j] * old_solution[j]);
+			}
+			// Weighted jacobi iteration
+			x->values[i] = ((1 - omega) *  x->values[i]) +
+				(omega * (B->values[i] - sum) / A->values[row_index + i]);
+		}
+	}
+	delete[] old_solution;
 }
