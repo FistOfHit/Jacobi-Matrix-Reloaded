@@ -2,6 +2,6 @@
 
 # The-jacobian-matrix-reloaded
 
-ACSE-5 project 3, code built for solving Ax = b style linear problems. Work done by Hitesh Kumar and Oliver Boom.
+Authors: Hitesh Kumar and Oliver Boom.
 
 
