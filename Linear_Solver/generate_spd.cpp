@@ -13,7 +13,8 @@ void print_solver_choices() {
 			  << "2) Cholesky decomposition based solver" << std::endl
 			  << "3) Iterative Jacobi solver" << std::endl
 			  << "4) Iterative Gauss-seidel solver" << std::endl
-			  << "5) Finished testing, return to main menu" << std::endl << std::endl;
+			  << "5) Iterative Successive Over-relaxation solver" << std::endl
+			  << "6) Finished testing, return to main menu" << std::endl << std::endl;
 
 }
 
@@ -64,7 +65,7 @@ void generate_solve_spd(int size) {
 		re_print = true;
 
 		// Prompt to user for input
-		std::cout << "Please enter your choice (1, 2, 3, 4 or 5): " << std::endl << std::endl;
+		std::cout << "Please enter your choice (1, 2, 3, 4, 5 or 6): " << std::endl << std::endl;
 		int method;
 		std::cin >> method;
 		
@@ -116,6 +117,17 @@ void generate_solve_spd(int size) {
 			return;
 
 		case 5:
+
+			std::cout << std::endl
+				<< "--------------------------------------------" << std::endl
+				<< "Iterative Successive over-relaxation solver " << std::endl
+				<< "--------------------------------------------" << std::endl << std::endl;
+
+			generated_problem.gauss_seidel_solve(1.8);
+			generated_problem.x->print();
+			return;
+
+		case 6:
 
 			system("cls");
 			std::cout << std::endl
