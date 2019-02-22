@@ -33,6 +33,9 @@
     <ClCompile Include="generate_spd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="solve_custom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tests.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="solve_custom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

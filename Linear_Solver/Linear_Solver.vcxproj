@@ -23,6 +23,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Solvers.cpp" />
+    <ClCompile Include="solve_custom.cpp" />
     <ClCompile Include="tests.cpp" />
     <ClCompile Include="user_interface.cpp" />
   </ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="generate_spd.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Solvers.h" />
+    <ClInclude Include="solve_custom.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="user_interface.h" />
   </ItemGroup>
