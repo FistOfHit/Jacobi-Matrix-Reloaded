@@ -133,14 +133,10 @@ void solve_custom_problem(Solver &loaded_solver) {
 				<< "--------------------------------------------" << std::endl << std::endl;
 			print_custom_solver_choices();
 			break;
-
 		}
-
 	}
-
 	delete loaded_solver.A;
 	delete loaded_solver.B;
 	delete loaded_solver.x;
 	delete &loaded_solver;
-
 }
