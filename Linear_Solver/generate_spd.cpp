@@ -15,8 +15,8 @@ void print_solver_choices() {
 			  << "4) Iterative Gauss-seidel solver" << std::endl
 			  << "5) Iterative Successive Over-relaxation solver" << std::endl
 			  << "6) Finished testing, return to main menu" << std::endl << std::endl;
-
 }
+
 
 
 void generate_solve_spd(int size) {
@@ -147,10 +147,6 @@ void generate_solve_spd(int size) {
 				<< "--------------------------------------------" << std::endl << std::endl;
 			print_solver_choices();
 			break;
-
 		}
-
 	}
-
-
 } 

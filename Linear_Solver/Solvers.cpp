@@ -45,6 +45,7 @@ void Solver::check_input_validity(){
 
 
 // Perform the decomposition to L and U
+// Using the Doolitle algorithm
 void Solver::form_LUD(Matrix<double> *U, Matrix<double> *L) {
 	// For square matrices only
 	assert(A->num_rows == A->num_cols);
@@ -69,7 +70,7 @@ void Solver::form_LUD(Matrix<double> *U, Matrix<double> *L) {
 }
 
 
-// Perform decomposition to L and L*
+// Perform decomposition into to L and L*
 void Solver::form_cholesky(Matrix<double> *L) {
 	// For square matrices only
 	assert(A->num_rows == A->num_cols);
@@ -129,6 +130,7 @@ void Solver::backward_substitution(Matrix<double> *U, Matrix<double> *y) {
 }
 
 
+// Solve the system via the lower upper decomposition algorithm
 void Solver::LUD_solve() {
 
 	// Checking to see if problem is valid
@@ -152,10 +154,10 @@ void Solver::LUD_solve() {
 
 	// Backward substitution
 	backward_substitution(U, y);
-
 }
 
 
+// Solve the system via the cholesky decomposition algorithm
 void Solver::cholesky_solve() {
 
 	// Checking to see if problem is valid
@@ -179,10 +181,10 @@ void Solver::cholesky_solve() {
 	y = forward_substitution(L, y);
 	// Backward substitution
 	backward_substitution(L_t, y);
-
 }
 
 
+// Solve the system via the gauss seidel algorithm
 void Solver::gauss_seidel_solve(double omega) {
 
 	// Checking to see if problem is valid
@@ -217,14 +219,13 @@ void Solver::gauss_seidel_solve(double omega) {
 			max_change = std::max(abs(x->values[i] - new_value), max_change);
 
 			x->values[i] = new_value;
-
 		}
 	}
 }
 
 
+// Solve the system via the jacobi algorithm
 void Solver::jacobi_solve(double omega) {
-
 
 	// Checking to see if problem is valid
 	check_input_validity();
@@ -259,7 +260,6 @@ void Solver::jacobi_solve(double omega) {
 			x->values[i] = ((1 - omega) *  x->values[i]) +
 				(omega * (B->values[i] - sum) / A->values[row_index + i]);
 		}
-
 
 		// Check to see if tolerance has been reached
 		for (int k = 0; k < x->num_rows; k++) {

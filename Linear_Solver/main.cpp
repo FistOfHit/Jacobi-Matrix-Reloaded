@@ -1,3 +1,12 @@
+//-----------------------------//
+//		    Authors			   //
+//							   //
+//		   Oliver Boom         //
+//		   Hitesh Kumar		   //
+//							   //
+//-----------------------------//
+
+
 #include <iostream>
 #include <math.h>
 #include <time.h>
@@ -8,9 +17,10 @@
 #include "user_interface.h"
 
 
+
 int main() {
 
+	// The primary UI wrapper that walks the user through the software
 	make_choice();
-
 	system("pause");
 }

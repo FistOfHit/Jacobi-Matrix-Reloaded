@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+
+// Generates matrices, loads predefined matrices and performs
+// basic matrix operations
 template <class T>
 class Matrix {
 
@@ -20,12 +23,13 @@ class Matrix {
 		void print();
 		void fill_zeros();
 
+		// Fills the matrices with a random symmetric positive definite matrix
 		void random_pdm(int size);
+		// Fills the matrix with random positive values
 		void random_B(int rows, int cols);
 
 		// Access specific elements
 		T get_value(int row_number, int col_number, bool verbose);
-	
 		void set_value(int row_number, int col_number, T value);
 
 		// Load in matrix case
