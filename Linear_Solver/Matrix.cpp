@@ -160,6 +160,53 @@ void Matrix<T>::mat_load(char name)
 
 
 template <class T>
+void Matrix<T>::read_LHS(int matrix_size) {
+
+	// Enter matrix element by element
+	int row_index;
+	double element;
+	// Each row
+	for (int i = 0; i < matrix_size; i++) {
+
+		// Each column
+		row_index = i * matrix_size;
+		for (int j = 0; j < matrix_size; j++) {
+			
+			// Prompt the user for next element
+			std::cout << std::endl << "Enter value for A[" << i << ", " << j << "]: ";
+			std::cin >> element;
+			this->values[row_index + j] = element;
+
+		}
+
+	}
+
+	std::cout << "All values entered. LHS A has been created." << std::endl;
+
+}
+
+
+template <class T>
+void Matrix<T>::read_RHS(int num_rows) {
+
+	// Enter vector element by element
+	double element;
+	// Each row
+	for (int i = 0; i < num_rows; i++) {
+
+		// Prompt the user for next element
+		std::cout << std::endl << "Enter value for b[" << i << "]: ";
+		std::cin >> element;
+		this->values[i] = element;
+
+	}
+
+	std::cout << "All values entered. RHS b has been created." << std::endl;
+
+}
+
+
+template <class T>
 void Matrix<T>::fill_zeros() {
 	for (int i = 0; i < this->num_rows; i++) {
 		for (int j = 0; j < this->num_cols; j++)

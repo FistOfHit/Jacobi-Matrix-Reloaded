@@ -31,6 +31,10 @@ class Matrix {
 		// Load in matrix case
 		void mat_load(char name);
 
+		// Read custom matrix from cmd
+		void read_LHS(int matrix_size);
+		void read_RHS(int num_rows);
+
 		// Perform some operations with our matrix
 		void matMatMult(Matrix* mat_right, Matrix* output);
 		// Initialise matrix attributes
