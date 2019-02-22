@@ -6,13 +6,10 @@
 #include <assert.h>
 #include <cstdlib>
 #include <algorithm>
-
-
+#include <memory>
 
 // Transpose any matrix
 Solver::Solver(Matrix<double> *A, Matrix<double> *B, Matrix<double> *x) : A(A), B(B), x(x) {};
-
-
 
 
 // Checks if inputs are actually valid fror the defined
@@ -23,8 +20,6 @@ void Solver::check_input_validity(){
 	if (A->num_rows != A->num_cols) {
 
 		std::cout << "This method does not support rectangular matricies" << std::endl
-			<< "Please consider either padding this array (array.pad(num_rows, num_cols))" << std::endl
-			<< "or consider using QR factorisation" << std::endl
 			<< "Exiting." << std::endl << std::endl;
 		return;
 	}
@@ -136,7 +131,6 @@ void Solver::backward_substitution(Matrix<double> *U, Matrix<double> *y) {
 
 void Solver::LUD_solve() {
 
-
 	// Checking to see if problem is valid
 	check_input_validity();
 
@@ -158,6 +152,7 @@ void Solver::LUD_solve() {
 
 	// Backward substitution
 	backward_substitution(U, y);
+
 }
 
 
@@ -182,11 +177,9 @@ void Solver::cholesky_solve() {
 	L_t = L->transpose();
 	// Forward substitution
 	y = forward_substitution(L, y);
-	delete L;
 	// Backward substitution
 	backward_substitution(L_t, y);
-	delete L_t;
-	delete y;
+
 }
 
 
