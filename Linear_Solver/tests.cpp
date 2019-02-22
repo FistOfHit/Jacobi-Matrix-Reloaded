@@ -216,6 +216,7 @@ void direct_solver_tests() {
 
 }
 
+
 void run_tests() {
 	creation_tests();
 	iterative_solver_tests();

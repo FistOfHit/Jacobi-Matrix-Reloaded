@@ -6,7 +6,7 @@
 #include <algorithm>
 
 
- //Constructor for zero array
+//Constructor for zero array
 template <class T>
 Matrix<T>::Matrix(int num_rows, int num_cols, bool self_allocate):  num_rows(num_rows), num_cols(num_cols),
                                                                    num_values(num_rows * num_cols), self_allocate(self_allocate)  {
@@ -37,7 +37,7 @@ Matrix<T>::~Matrix() {
 }
 
 
-// Print out matrix values in a nice, human readable manner
+// Print out matrix values in a human readable manner
 template <class T>
 void Matrix<T>::print() { 
 	// Size of whats being printed
@@ -61,7 +61,6 @@ void Matrix<T>::print() {
 template <class T>
 T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 
-
 	// Checking if the element actually exists
 	if ((row_number < 0) || (row_number >= this->num_rows)) {
 
@@ -77,21 +76,16 @@ T Matrix<T>::get_value(int row_number, int col_number, bool verbose) {
 			<< this->num_cols << " columns." << std::endl
 			<< "Returning -1." << std::endl;
 		return -1;
-
 	}
-
 
 	// Creating memory for the element and finding it
 	T required_element = this->values[(row_number * this->num_cols) + col_number];
-
 
 	// If user wants it printed at runtime
 	if (verbose) {
 		std::cout << "Value at [" << row_number << "][" << col_number << "] = "
 				  << required_element << std::endl;
 	}
-
-
 	return required_element;
 }
 
@@ -115,10 +109,11 @@ void Matrix<T>::set_value(int row_number, int col_number, T value) {
 }
 
 
+// Loads from a set of predefined matrix examples
 template <class T>
 void Matrix<T>::mat_load(char name)
 {
-	if (name == 'A') { // LU Decomposition example
+	if (name == 'A') {		  // LU Decomposition example
 		this->values[0] = 2;
 		this->values[1] = -1;
 		this->values[2] = -2;
@@ -129,12 +124,12 @@ void Matrix<T>::mat_load(char name)
 		this->values[7] = -2;
 		this->values[8] = 8;
 	}
-	else if (name == 'B') { // B 
+	else if (name == 'B') {  // B 
 		this->values[0] = 3;
 		this->values[1] = 2;
 		this->values[2] = 1;
 	}
-	else if (name == 'C') { // Cholesky example
+	else if (name == 'C') {  // Cholesky example
 		this->values[0] = 4;
 		this->values[1] = 12;
 		this->values[2] = -16;
@@ -177,13 +172,9 @@ void Matrix<T>::read_LHS(int matrix_size) {
 			std::cout << std::endl << "Enter value for A[" << i << ", " << j << "]: ";
 			std::cin >> element;
 			this->values[row_index + j] = element;
-
 		}
-
 	}
-
 	std::cout << "All values entered. LHS A has been created." << std::endl;
-
 }
 
 
@@ -199,14 +190,13 @@ void Matrix<T>::read_RHS(int num_rows) {
 		std::cout << std::endl << "Enter value for b[" << i << "]: ";
 		std::cin >> element;
 		this->values[i] = element;
-
 	}
-
 	std::cout << "All values entered. RHS b has been created." << std::endl;
-
 }
 
 
+
+//Fills the whole matrix with zero entries
 template <class T>
 void Matrix<T>::fill_zeros() {
 	for (int i = 0; i < this->num_rows; i++) {
@@ -216,6 +206,7 @@ void Matrix<T>::fill_zeros() {
 }
 
 
+// Returns the transpose of the matrix instance
 template <class T>
 Matrix<T>* Matrix<T>::transpose() {
 	auto *A_t = new Matrix<T>(this->num_rows, this->num_cols, true);
@@ -229,24 +220,31 @@ Matrix<T>* Matrix<T>::transpose() {
 }
 
 
-// Generate random positive definite matrix of definited input size
+// Generates a random Symmetric Positive Definite
+// matrix of definited input size
 template <class T>
 void Matrix<T>::random_pdm(int size) {
 	auto *rand_mat = new Matrix<T>(size, size, true);
 
+	// Creates a matrix of pseudo random values
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			rand_mat->values[i * (size) + j] = rand() % 5;
 		}
 	}
 
-	rand_mat->print();
-
+	// Creates the transpose of the pseudo random matrix
 	auto *rand_mat_trans = new Matrix<T>(size, size, true);
 	rand_mat_trans = rand_mat->transpose();
+
+	// Mutliplies the matrix by its transpose 
+	// returning it into this matrix instance
 	rand_mat->matMatMult(rand_mat_trans, this);
 
-
+	// To ensure that the diagonal column is the largest entity
+	// and therefore that the matrix is indeed a SPD matrix
+	// Takes the largest value in each row and places that in
+	// in the diagonal row and add 1
 	double max_in_row;
 	for (int i = 0; i < size; i++) {
 		max_in_row = 0;
@@ -255,11 +253,10 @@ void Matrix<T>::random_pdm(int size) {
 		}
 		this->values[i * (size)+i] += max_in_row + 1;
 	}
-
 }
 
 
-// Generate random positive definite matrix of definited input size
+// Generate random positive integer matrix of definited input size
 template <class T>
 void Matrix<T>::random_B(int rows, int cols) {
 	for (int i = 0; i < rows; i++) {
@@ -270,6 +267,7 @@ void Matrix<T>::random_B(int rows, int cols) {
 }
 
 
+// Mulitplies two matrices together
 template <class T>
 void Matrix<T>::matMatMult(Matrix* mat_right, Matrix* output){	
 	// Check our dimensions match
