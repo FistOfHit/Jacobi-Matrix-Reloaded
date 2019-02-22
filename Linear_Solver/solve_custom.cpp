@@ -12,7 +12,8 @@ void print_custom_solver_choices() {
 		<< "2) Cholesky decomposition based solver" << std::endl
 		<< "3) Iterative Jacobi solver" << std::endl
 		<< "4) Iterative Gauss-seidel solver" << std::endl
-		<< "5) Finished testing, return to main menu" << std::endl << std::endl;
+		<< "5) Iterative Successive Over-relaxation solver" << std::endl
+		<< "6) Finished testing, return to main menu" << std::endl << std::endl;
 
 }
 
@@ -102,6 +103,17 @@ void solve_custom_problem(Solver &loaded_solver) {
 			return;
 
 		case 5:
+
+			std::cout << std::endl
+				<< "--------------------------------------------" << std::endl
+				<< "Iterative Successive over-relaxation solver " << std::endl
+				<< "--------------------------------------------" << std::endl << std::endl;
+
+			loaded_solver.gauss_seidel_solve(1.8);
+			loaded_solver.x->print();
+			return;
+
+		case 6:
 
 			system("cls");
 			std::cout << std::endl
