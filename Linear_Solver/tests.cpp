@@ -75,6 +75,13 @@ void iterative_solver_tests() {
 	test_RHS.set_value(3, 0, 15);
 
 	std::cout << "----------Test: Jacobi iterative solver----------" << std::endl;
+
+	// Show the problem being solved:
+	std::cout << "LHS matrix A: " << std::endl;
+	test_LHS.print();
+	std::cout << "RHS vector b: " << std::endl;
+	test_RHS.print();
+
 	// Start with initial condition 0 vector,
 	// See if jacobi with omega = 1 converges
 	Matrix<double> test_jac_sol(4, 1, true);
@@ -94,6 +101,13 @@ void iterative_solver_tests() {
 	test_solver.x->print();
 
 	std::cout << "----------Test: Gauss-seidel iterative solver----------" << std::endl;
+
+	// Show the problem being solved:
+	std::cout << "LHS matrix A: " << std::endl;
+	test_LHS.print();
+	std::cout << "RHS vector b: " << std::endl;
+	test_RHS.print();
+
 	// Start with initial condition 0 vector,
 	// See if gauss-seidel with omega = 1 converges
 	Matrix<double> test_gs_sol(4, 1, true);
@@ -113,6 +127,13 @@ void iterative_solver_tests() {
 	test_solver.x->print();
 
 	std::cout << "----------Test: Successive over-relaxation (SOR) iterative solver----------" << std::endl;
+
+	// Show the problem being solved:
+	std::cout << "LHS matrix A: " << std::endl;
+	test_LHS.print();
+	std::cout << "RHS vector b: " << std::endl;
+	test_RHS.print();
+
 	// Start with initial condition 0 vector,
 	// See if gauss-seidel with omega = 1.5 converges (SOR)
 	Matrix<double> test_sor_sol(4, 1, true);
@@ -135,7 +156,6 @@ void iterative_solver_tests() {
 
 void direct_solver_tests() {
 
-
 	int rows = 3;
 	int cols = 3;
 
@@ -153,6 +173,13 @@ void direct_solver_tests() {
 	x->fill_zeros();
 
 	std::cout << "----------LU-decomposition based solver----------" << std::endl;
+
+	// Show the problem being solved:
+	std::cout << "LHS matrix A: " << std::endl;
+	A->print();
+	std::cout << "RHS vector b: " << std::endl;
+	B->print();
+
 	std::cout << "Expected print out: " << std::endl
 		   	  << "Matrix 1 X 3" << std::endl
 			  << "Data type: double" << std::endl
@@ -164,6 +191,13 @@ void direct_solver_tests() {
 
 	// Only works for symmetric matrices
 	std::cout << "----------Cholesky decomposition based solver----------" << std::endl;
+
+	// Show the problem being solved:
+	std::cout << "LHS matrix A: " << std::endl;
+	C->print();
+	std::cout << "RHS vector b: " << std::endl;
+	B->print();
+
 	std::cout << "Expected print out: " << std::endl
 			  << "Matrix 1 X 3" << std::endl
 			  << "Data type: double" << std::endl
