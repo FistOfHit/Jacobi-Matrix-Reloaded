@@ -13,43 +13,6 @@
 Solver::Solver(Matrix<double> *A, Matrix<double> *B, Matrix<double> *x) : A(A), B(B), x(x) {};
 
 
-Matrix<double>* Solver::transpose(Matrix<double> *A) {
-	auto *A_t = new Matrix<double>(A->num_rows, A->num_cols, true);
-
-	// Iterate through elements, swapping
-	for (int i = 0; i < A->num_rows; i++) {
-		for (int j = 0; j < A->num_cols; j++) {
-			A_t->values[j * A->num_rows + i] = A->values[i* A->num_rows + j];
-		}
-	}
-	return A_t;
-}
-
-// Generate random positive definite matrix of definited input size
-Matrix<double>* Solver::random_pdm(int size) {
-	auto *rand_mat = new Matrix<double>(size, size, true);
-	for (int i = 0; i <= size; i++) {
-		for (int j = 0; j <= size; j++) {
-			rand_mat->values[j * (size-1) + i] = rand() % 5;
-		} 
-	}
-	auto *rand_mat_trans = new Matrix<double>(size, size, true);
-	rand_mat_trans = transpose(rand_mat);
-	auto *pdm = new Matrix<double>(size, size, true);
-	rand_mat->matMatMult(rand_mat_trans, pdm);
-	return pdm;
-}
-
-// Generate random positive definite matrix of definited input size
-Matrix<double>* Solver::random_B(int rows, int cols) {
-	auto *B = new Matrix<double>(rows, cols, true);
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			B->values[j * (rows)+i] = rand() % 9;
-		}
-	}
-	return B;
-}
 
 
 // Checks if inputs are actually valid fror the defined
@@ -216,7 +179,7 @@ void Solver::cholesky_solve() {
 	// Decompose A matrix into lower triangular
 	form_cholesky(L);
 	// Form upper triangular from lower triangular
-	L_t = transpose(L);
+	L_t = L->transpose();
 	// Forward substitution
 	y = forward_substitution(L, y);
 	delete L;

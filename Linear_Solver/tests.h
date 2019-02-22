@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Matrix.cpp"
+#include "Matrix.h"
 #include "Solvers.h"
 
 // Tests for integral parts of the codebase

@@ -16,8 +16,12 @@ class Matrix {
 		virtual ~Matrix();
 
 		// Print out the values in our matrix
+		Matrix<T>* transpose();
 		void print();
 		void fill_zeros();
+
+		void random_pdm(int size);
+		void random_B(int rows, int cols);
 
 		// Access specific elements
 		T get_value(int row_number, int col_number, bool verbose);

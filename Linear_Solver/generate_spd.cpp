@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Matrix.h"
+#include "Matrix.cpp"
 #include "Solvers.h"
 #include "generate_spd.h"
 
@@ -31,9 +32,9 @@ void generate_solve_spd(int size) {
 	auto *solution = new Matrix<double>(1, size, true);
 	
 	// Create matrix and solvers
+	rand_spd_matrix->random_pdm(size);
+	rand_b->random_B(1, size);
 	class Solver generated_problem(rand_spd_matrix, rand_b, solution); // LUD case
-	rand_spd_matrix = generated_problem.random_pdm(size);
-	rand_b = generated_problem.random_B(1, size);
 
 	// What SPD matrix has been created
 	std::cout << "----------SPD Left hand side matrix, A----------" << std::endl;

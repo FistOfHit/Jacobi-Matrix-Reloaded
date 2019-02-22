@@ -14,13 +14,10 @@ class Solver{
 		Matrix<double> *B;			// B matrix
 		Matrix<double> *x;			// X solution matrix
 
-		Matrix<double>* random_pdm(int size);
-		Matrix<double>* random_B(int rows, int cols);
-
 		// To check if the inputs are valid.
 		void check_input_validity();
 		// Transposing any matrix
-		Matrix<double>* transpose(Matrix<double> *A);
+		
 		// Create the L and U/L* for the direct methods
 		void form_LUD(Matrix<double> *U, Matrix<double> *L);
 		void form_cholesky(Matrix<double> *L);

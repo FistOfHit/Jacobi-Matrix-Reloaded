@@ -168,6 +168,44 @@ void Matrix<T>::fill_zeros() {
 }
 
 
+template <class T>
+Matrix<T>* Matrix<T>::transpose() {
+	auto *A_t = new Matrix<T>(this->num_rows, this->num_cols, true);
+	// Iterate through elements, swapping
+	for (int i = 0; i < this->num_rows; i++) {
+		for (int j = 0; j < this->num_cols; j++) {
+			A_t->values[j * this->num_rows + i] = this->values[i* this->num_rows + j];
+		}
+	}
+	return A_t;
+}
+
+
+// Generate random positive definite matrix of definited input size
+template <class T>
+void Matrix<T>::random_pdm(int size) {
+	auto *rand_mat = new Matrix<T>(size, size, true);
+	for (int i = 0; i <= size; i++) {
+		for (int j = 0; j <= size; j++) {
+			rand_mat->values[j * (size - 1) + i] = rand() % 5;
+		}
+	}
+	auto *rand_mat_trans = new Matrix<T>(size, size, true);
+	rand_mat_trans = rand_mat->transpose();
+	rand_mat->matMatMult(rand_mat_trans, this);
+}
+
+
+// Generate random positive definite matrix of definited input size
+template <class T>
+void Matrix<T>::random_B(int rows, int cols) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			this->values[j * (rows)+i] = rand() % 9;
+		}
+	}
+}
+
 
 template <class T>
 void Matrix<T>::matMatMult(Matrix* mat_right, Matrix* output){	
