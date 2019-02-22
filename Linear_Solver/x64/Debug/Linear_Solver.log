@@ -1,2 +1,9 @@
-﻿  Solvers.cpp
+﻿  generate_spd.cpp
+  main.cpp
+  Matrix.cpp
+  Solvers.cpp
+  solve_custom.cpp
+  tests.cpp
+  user_interface.cpp
+  Generating Code...
   Linear_Solver.vcxproj -> C:\Users\Hitesh Kumar\Documents\GitHub\acse-5-advanced-programming-coursework-3-the-jacobian-matrix-reloaded\x64\Debug\Linear_Solver.exe
