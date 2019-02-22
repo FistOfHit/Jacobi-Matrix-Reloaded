@@ -3,6 +3,7 @@
 #include <string>
 #include <typeinfo>
 #include "Matrix.h"
+#include <algorithm>
 
 
  //Constructor for zero array
@@ -221,7 +222,7 @@ Matrix<T>* Matrix<T>::transpose() {
 	// Iterate through elements, swapping
 	for (int i = 0; i < this->num_rows; i++) {
 		for (int j = 0; j < this->num_cols; j++) {
-			A_t->values[j * this->num_rows + i] = this->values[i* this->num_rows + j];
+			A_t->values[i * this->num_rows + j] = this->values[j * this->num_rows + i];
 		}
 	}
 	return A_t;
@@ -232,14 +233,29 @@ Matrix<T>* Matrix<T>::transpose() {
 template <class T>
 void Matrix<T>::random_pdm(int size) {
 	auto *rand_mat = new Matrix<T>(size, size, true);
-	for (int i = 0; i <= size; i++) {
-		for (int j = 0; j <= size; j++) {
-			rand_mat->values[j * (size - 1) + i] = rand() % 5;
+
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			rand_mat->values[i * (size) + j] = rand() % 5;
 		}
 	}
+
+	rand_mat->print();
+
 	auto *rand_mat_trans = new Matrix<T>(size, size, true);
 	rand_mat_trans = rand_mat->transpose();
 	rand_mat->matMatMult(rand_mat_trans, this);
+
+
+	double max_in_row;
+	for (int i = 0; i < size; i++) {
+		max_in_row = 0;
+		for (int j = 0; j < size; j++) {
+			max_in_row = std::max(this->values[i * (size) + j], max_in_row);
+		}
+		this->values[i * (size)+i] += max_in_row + 1;
+	}
+
 }
 
 
@@ -248,7 +264,7 @@ template <class T>
 void Matrix<T>::random_B(int rows, int cols) {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
-			this->values[j * (rows)+i] = rand() % 9;
+			this->values[i * rows + j] = rand() % 9;
 		}
 	}
 }
