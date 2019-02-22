@@ -195,7 +195,9 @@ void Solver::gauss_seidel_solve(double omega) {
 
 	double tolerance = 0.000001;
 	while (max_change > tolerance) {
+
 		max_change = 0;
+
 		// Iterate through each element
 		for (int i = 0; i < A->num_rows; i++) {
 
@@ -225,20 +227,24 @@ void Solver::gauss_seidel_solve(double omega) {
 
 void Solver::jacobi_solve(double omega) {
 
-
 	// Checking to see if problem is valid
 	check_input_validity();
 
+	// Safeguard against mxing up row and column vectors
+	int solution_size;
+	solution_size = std::max(x->num_cols, x->num_rows);
+
 	// Create array to store old solution for jacobi
-	double *old_solution = new double[x->num_rows];
+	double *old_solution = new double[solution_size];
 	double sum;
 	double max_change = 1;
 	int row_index;
 
-	for (int k = 0; k < x->num_rows; k++) {
+	for (int k = 0; k < solution_size; k++) {
 		old_solution[k] = x->values[k];
 	}
 
+	omega = 1;
 	double tolerance = 0.000001;
 	while (max_change > tolerance) {
 
@@ -246,7 +252,7 @@ void Solver::jacobi_solve(double omega) {
 		
 		// Iterate through each element
 		for (int i = 0; i < A->num_rows; i++) {
-			sum = 0;
+			sum = 0.0;
 			row_index = i * A->num_cols;
 			// Use old information fist, dont overwrite
 			for (int j = 0; j < i; j++) {
@@ -257,19 +263,20 @@ void Solver::jacobi_solve(double omega) {
 			}
 			// Weighted jacobi iteration
 			x->values[i] = ((1 - omega) *  x->values[i]) +
-				(omega * (B->values[i] - sum) / A->values[row_index + i]);
+				            (omega * (B->values[i] - sum) / A->values[row_index + i]);
 		}
 
 
 		// Check to see if tolerance has been reached
-		for (int k = 0; k < x->num_rows; k++) {
+		for (int k = 0; k < solution_size; k++) {
 			max_change = std::max(abs(old_solution[k] - x->values[k]), max_change);
 		}
 
 		// Replace old with new and iterate onwards
-		for (int k = 0; k < x->num_rows; k++) {
+		for (int k = 0; k < solution_size; k++) {
 			old_solution[k] = x->values[k];
 		}
+
 	}
 	delete[] old_solution;
 }

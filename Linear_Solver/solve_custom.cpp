@@ -87,7 +87,7 @@ void solve_custom_problem(Solver &loaded_solver) {
 				<< "          Iterative Jacobi solver           " << std::endl
 				<< "--------------------------------------------" << std::endl << std::endl;
 
-			loaded_solver.jacobi_solve();
+			loaded_solver.jacobi_solve(0.0);
 			loaded_solver.x->print();
 			return;
 

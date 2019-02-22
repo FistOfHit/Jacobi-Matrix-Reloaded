@@ -28,5 +28,5 @@ class Solver{
 		void LUD_solve();
 		void cholesky_solve();
 		void gauss_seidel_solve(double omega = 1.0);
-		void jacobi_solve(double omega = 1.0);
+		void jacobi_solve(double omega = 2.0/3.0);
 };
