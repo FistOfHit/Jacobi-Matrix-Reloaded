@@ -117,6 +117,7 @@ void generate_solve_spd(int size) {
 
 		case 5:
 
+			system("cls");
 			std::cout << std::endl
 				<< "--------------------------------------------" << std::endl
 				<< "           returning to main menu           " << std::endl
@@ -127,6 +128,7 @@ void generate_solve_spd(int size) {
 
 		default:
 
+			system("cls");
 			std::cout << std::endl
 				<< "--------------------------------------------" << std::endl
 				<< "Invalid choice. Please choose 1, 2, 3 or 4." << std::endl
